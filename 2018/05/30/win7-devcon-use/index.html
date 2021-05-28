@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Lyw</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="#win7里使用命令行检测硬件改动 2018-04-07 16:26:44技术 最近从win10换成win7，惠普自带的USB鼠标总出现检测不到的问题，需要手动检测硬件改动才能重新使用光鼠。 起初一直是用计算机-&amp;gt;管理-&amp;gt;设备管理器-&amp;gt;检测硬件改动来实现，特别麻烦，今天在网上找到一个微软的工具可以解决这个问题。 devcon 这是一个微软给早期系统(2003及以前)的设备管理的命">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lyw">
+<meta property="og:url" content="http://yoursite.com/2018/05/30/win7-devcon-use/index.html">
+<meta property="og:site_name" content="Lyw">
+<meta property="og:description" content="#win7里使用命令行检测硬件改动 2018-04-07 16:26:44技术 最近从win10换成win7，惠普自带的USB鼠标总出现检测不到的问题，需要手动检测硬件改动才能重新使用光鼠。 起初一直是用计算机-&amp;gt;管理-&amp;gt;设备管理器-&amp;gt;检测硬件改动来实现，特别麻烦，今天在网上找到一个微软的工具可以解决这个问题。 devcon 这是一个微软给早期系统(2003及以前)的设备管理的命">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-05-30T08:37:16.699Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Lyw">
+<meta name="twitter:description" content="#win7里使用命令行检测硬件改动 2018-04-07 16:26:44技术 最近从win10换成win7，惠普自带的USB鼠标总出现检测不到的问题，需要手动检测硬件改动才能重新使用光鼠。 起初一直是用计算机-&amp;gt;管理-&amp;gt;设备管理器-&amp;gt;检测硬件改动来实现，特别麻烦，今天在网上找到一个微软的工具可以解决这个问题。 devcon 这是一个微软给早期系统(2003及以前)的设备管理的命">
+  
+    <link rel="alternate" href="/atom.xml" title="Lyw" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Lyw</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-win7-devcon-use" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/05/30/win7-devcon-use/" class="article-date">
+  <time datetime="2018-05-30T08:37:07.515Z" itemprop="datePublished">2018-05-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#win7里使用命令行检测硬件改动</p>
+<h4 id="2018-04-07-16-26-44"><a href="#2018-04-07-16-26-44" class="headerlink" title="2018-04-07 16:26:44"></a>2018-04-07 16:26:44</h4><h4 id="技术"><a href="#技术" class="headerlink" title="技术"></a>技术</h4><hr>
+<p>最近从win10换成win7，惠普自带的USB鼠标总出现检测不到的问题，需要手动检测硬件改动才能重新使用光鼠。</p>
+<p>起初一直是用计算机-&gt;管理-&gt;设备管理器-&gt;检测硬件改动来实现，特别麻烦，今天在网上找到一个微软的工具可以解决这个问题。</p>
+<p><code>devcon</code></p>
+<p>这是一个微软给早期系统(2003及以前)的设备管理的命令行工具，相当于命令行的设备管理器。</p>
+<p>微软的官网下载连接已经坏掉。。。网上有32位的和IA64位（基本没用，因为现在个人电脑的64位都不是IA64架构），百度这个工具下载后可以运行</p>
+<p>参数摘录如下</p>
+<blockquote>
+</blockquote>
+<p>devcon.exe [-r] [-m:\\&lt;machine&gt;] &lt;command&gt; [&lt;arg&gt;]<br>-r if specified will reboot machine after command is complete, if needed.<br>&lt;machine&gt; 目标机器名字.<br>&lt;command&gt; 命令(见下面).<br>&lt;arg&gt;传给命令的参数.<br>For help on a specific command, type: devcon.exe help <command><br>classfilter       允许修改class filters.<br>classes         显示设备安装classes.<br>disable         用指定的硬件名称或者instance ID禁用设备<br>driverfiles       列出设备安装的驱动文件.<br>drivernodes     显示设备的所有节点的驱动.<br>enable          用指定的硬件名称或者instance ID启用设备.<br>find            用指定的硬件名称或者instance ID查找设备.<br>findall          查找所有硬件设备包括不显示的.<br>help            显示帮助信息.<br>hwids           显示设备硬件ID.<br>install           手动安装设备.<br>listclass         显示所有设备的安装 class.<br>reboot          重启本地机器.<br>remove          用指定的硬件名称或者instance ID删除设备.<br><strong>rescan          从新扫描硬件信息.   我们要的就是这一个</strong><br>resources        显示设备使用的硬件资源.<br>restart           用指定的硬件名称或者instance ID重启设备.<br>stack            列出设备的驱动堆栈.<br>status           列出设备的状态.<br>update          手动更新设备驱动.<br>updateNI        不显示用户界面的更新设备状态<br>SetHwID        添加、删除、编辑硬件ID的顺序.</p>
+<p>所以设一个计划任务或者用脚本定时什么的，方便多了。</p>
+<p>另外有人说win7下不成功的情况，在<a href="https://answers.microsoft.com/en-us/windows/forum/windows_7-hardware/devcon-not-working-correctly-in-windows-7/9abcc12c-d7db-4249-aec4-fc4ff0ea6ee8" target="_blank" rel="noopener">https://answers.microsoft.com/en-us/windows/forum/windows_7-hardware/devcon-not-working-correctly-in-windows-7/9abcc12c-d7db-4249-aec4-fc4ff0ea6ee8</a> 这个帖子下有一个解决方法（win7 64位），大意是提取amd64版本的devcon，因为本人没有遇到，就没有去试了。</p>
+<p>至于每次打开会有win7的UAC提示（毕竟是老程序了）什么的，以后再专门写个文章处理添加信任的问题~</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/05/30/win7-devcon-use/" data-id="cjhsv7rkk000374govdaieefb" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/05/30/asm-review/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/05/30/First-test/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">First test</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/05/30/dual-ubuntu-win-setup-instruction/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/30/asm-review/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/30/win7-devcon-use/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/30/First-test/">First test</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/30/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Yiwei Li<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

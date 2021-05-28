@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>汇编课的一些总结 | Lyw</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="平台:Linux-x86语法：AT&amp;amp;T（目的操作数在右边，而Intel语法的目的操作数在左边） —————————–不定期更新——————————-  lea和mov的区别  这个其实很好看了，lea的语法是 lea s,d 将s的有效地址放入d中。我的理解类似于C语言中对s变量取一次地址，而mov是直接把内容放在d中了。其实lea和add等算术运算更相似。  举个例子说明二者的异同： l">
+<meta name="keywords" content="笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="汇编课的一些总结">
+<meta property="og:url" content="http://yoursite.com/2017/06/01/asm-review/index.html">
+<meta property="og:site_name" content="Lyw">
+<meta property="og:description" content="平台:Linux-x86语法：AT&amp;amp;T（目的操作数在右边，而Intel语法的目的操作数在左边） —————————–不定期更新——————————-  lea和mov的区别  这个其实很好看了，lea的语法是 lea s,d 将s的有效地址放入d中。我的理解类似于C语言中对s变量取一次地址，而mov是直接把内容放在d中了。其实lea和add等算术运算更相似。  举个例子说明二者的异同： l">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-06-20T03:39:13.071Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="汇编课的一些总结">
+<meta name="twitter:description" content="平台:Linux-x86语法：AT&amp;amp;T（目的操作数在右边，而Intel语法的目的操作数在左边） —————————–不定期更新——————————-  lea和mov的区别  这个其实很好看了，lea的语法是 lea s,d 将s的有效地址放入d中。我的理解类似于C语言中对s变量取一次地址，而mov是直接把内容放在d中了。其实lea和add等算术运算更相似。  举个例子说明二者的异同： l">
+  
+    <link rel="alternate" href="/atom.xml" title="Lyw" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Lyw</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-asm-review" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/06/01/asm-review/" class="article-date">
+  <time datetime="2017-05-31T16:00:00.000Z" itemprop="datePublished">2017-06-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      汇编课的一些总结
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>平台:Linux-x86<br>语法：AT&amp;T（目的操作数在右边，而Intel语法的目的操作数在左边）</p>
+<p>—————————–不定期更新——————————-</p>
+<ol>
+<li><p>lea和mov的区别</p>
+<p> 这个其实很好看了，lea的语法是 lea s,d 将s的有效地址放入d中。我的理解类似于C语言中对s变量取一次地址，而mov是直接把内容放在d中了。其实lea和add等算术运算更相似。</p>
+<p> 举个例子说明二者的异同： lea 2(%eax),%eax 和 add $2,%eax就是一样的功能：把eax存的地址+2，指向了靠后两个的地址</p>
+<p> lea的优点：快，用于地址的运算，只要一拍</p>
+</li>
+<li><p>call ret leave比较</p>
+<p> call d执行的是如下操作：把当前eip值储存入栈（相当于 pushl %eip），然后跳到d地址（子程序入口）接着走</p>
+<p> ret的前提是栈顶指针esp指向的是一个eip旧值，这样执行ret时把esp指向的地址（eip旧值）放到eip，然后退栈，这样esp也减一</p>
+<p> leave就更厉害了，他针对的是整个栈帧（子程序栈空间），当子程序操作完成后，执行如下操作：esp=ebp ebp=pop()</p>
+<p> 也就是ebp恢复成了ebp旧值（主函数的栈底），esp首先跳到指向ebp旧值处，然后因为pop操作，ebp继续减一，变成了主函数的栈顶。</p>
+<p> 可以说这些操作都可以由基本的mov push pop dec这些指令组合实现</p>
+<p> 要使用子程序时，先pushl %ebp把ebp旧值保存起来，然后mov %esp,%ebp 把ebp变为esp，这样就是子程序的栈底了。</p>
+<p> 当子程序完成他的使命后，先leave，再ret，第一步清空子程序栈帧，第二步把eip回复到主程序里继续走。</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/06/01/asm-review/" data-id="cjivenq4n0000h8goq21cb7yv" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/笔记/">笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/08/11/dual-ubuntu-win-setup-instruction/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          win7+ubuntu16.04LTS双系统安装方法
+        
+      </div>
+    </a>
+  
+  
+    <a href="/1970/01/01/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello world</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术/">技术</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/笔记/">笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/随笔/">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/技术/" style="font-size: 10px;">技术</a> <a href="/tags/笔记/" style="font-size: 20px;">笔记</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">一月 1970</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/06/20/lyric-sharing-02/">歌词分享002期</a>
+          </li>
+        
+          <li>
+            <a href="/2018/06/19/open3d-notes/">Open3D 学习笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/31/algorithm-notes/">算法学习笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/30/lyric-sharing-01/">歌曲分享第1期</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/07/win7-devcon-use/">win7里使用命令行检测硬件改动</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Yiwei Li<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/icons/safari-pinned-tab.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="笔记," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Scala&amp;amp;Chisel学习笔记  注：本人学习Chisel和Scala的笔记 材料主要来源：https://github.com/freechipsproject/chisel-bootcamp 欢迎留言讨论   Interpolated string println(s”wordwordword$var”) printf(p”$io”) s”wordwordword${max + ma">
+<meta name="keywords" content="笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scala&amp;Chisel学习笔记">
+<meta property="og:url" content="http://yoursite.com/2018/11/06/chisel-note/index.html">
+<meta property="og:site_name" content="Lyw">
+<meta property="og:description" content="Scala&amp;amp;Chisel学习笔记  注：本人学习Chisel和Scala的笔记 材料主要来源：https://github.com/freechipsproject/chisel-bootcamp 欢迎留言讨论   Interpolated string println(s”wordwordword$var”) printf(p”$io”) s”wordwordword${max + ma">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-11-08T12:58:30.689Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Scala&amp;Chisel学习笔记">
+<meta name="twitter:description" content="Scala&amp;amp;Chisel学习笔记  注：本人学习Chisel和Scala的笔记 材料主要来源：https://github.com/freechipsproject/chisel-bootcamp 欢迎留言讨论   Interpolated string println(s”wordwordword$var”) printf(p”$io”) s”wordwordword${max + ma">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/06/chisel-note/"/>
+
+
+
+
+
+  <title>Scala&Chisel学习笔记 | Lyw</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Lyw</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-game">
+          <a href="/game/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br />
+            
+            game
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/06/chisel-note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiwei Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lyw">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Scala&Chisel学习笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-06T17:06:55+08:00">
+                2018-11-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center"><p><strong>Scala&amp;Chisel学习笔记</strong></p>
+</blockquote>
+<p>注：本人学习Chisel和Scala的笔记</p>
+<p>材料主要来源：<a href="https://github.com/freechipsproject/chisel-bootcamp" target="_blank" rel="noopener">https://github.com/freechipsproject/chisel-bootcamp</a></p>
+<p>欢迎留言讨论</p>
+<hr>
+<ol>
+<li><p>Interpolated string</p>
+<p>println(s”wordwordword$var”)</p>
+<p>printf(p”$io”)</p>
+<p>s”wordwordword${max + max}”</p>
+</li>
+<li><p>seq操作</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> seq = <span class="type">Seq</span>(<span class="string">"a"</span>, <span class="number">1</span>, <span class="number">0.0</span>)</span><br><span class="line"></span><br><span class="line">seq.foreach &#123; x =&gt; &#123;</span><br><span class="line"></span><br><span class="line">   	...&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<a id="more"></a>
+<ol start="3">
+<li><p>map操作</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> intList = <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"><span class="keyword">val</span> stringList = intList.map &#123; i =&gt;</span><br><span class="line">  i.toString</span><br><span class="line">&#125;<span class="comment">//或者写成.map &#123;_.tostring&#125; _代表下标</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> map = <span class="type">Map</span>(<span class="string">"a"</span> -&gt; <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">map.get(<span class="string">"a"</span>) <span class="comment">//= Some(1)</span></span><br><span class="line">map.get(<span class="string">"b"</span>) <span class="comment">//= None</span></span><br><span class="line">map(<span class="string">"a"</span>) <span class="comment">// = 1</span></span><br><span class="line">map(<span class="string">"b"</span>) <span class="comment">//报错</span></span><br><span class="line"><span class="comment">//Some和None都是抽象类Option的子类</span></span><br><span class="line"><span class="type">Option</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Option的方法</p>
+<ul>
+<li>get方法，对None执行get会报错</li>
+<li>getOrElse(default)方法，找不到时返回default</li>
+<li>isDefined，对Some返回真，对None返回假</li>
+</ul>
+<p>Option[UInt] = None常用于可选参数，比如optionResetValue</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> reg = resetValue <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Some</span>(r) =&gt; <span class="type">RegInit</span>(r)</span><br><span class="line">    <span class="keyword">case</span> <span class="type">None</span>    =&gt; <span class="type">Reg</span>(<span class="type">UInt</span>())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>reduce操作</p>
+<p><code>list.reduce(\_+\_)</code></p>
+<p><code>list.fold(initial)(\_+\_)</code>带初值的reduce</p>
+<p><code>list.scan(initial)(_prev+_next)</code>把reduce的每一步生成列表</p>
+<p>也有<code>reduceRight</code>等等</p>
+</li>
+<li><p>Vec使用</p>
+<p>优先推荐Seq或List，除非以下情形：</p>
+<ul>
+<li>Bundle的集合</li>
+<li>访问Vec的索引i和电路有关</li>
+</ul>
+<p>两个Vec对应元素的操作</p>
+<p>​    <code>(vec_a zip vec_b).map {case (a, b) =&gt; a * b}</code></p>
+<p>​    <code>list.zipWithIndex</code>：List((‘a’, 0), (‘b’, 1), …)</p>
+<p>Vec初始化0</p>
+<p><code>RegInit( Vec(32, UInt(32.W)).fromBits(0.U) )</code></p>
+</li>
+<li><p>class</p>
+<p>class Passthrough(param1 : Int, param2) extends Module {</p>
+<p>}</p>
+</li>
+<li><p>tester代码模版</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyOperatorsTester</span>(<span class="params">c: <span class="type">MyOperators</span></span>) <span class="keyword">extends</span> <span class="title">PeekPokeTester</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">  expect(c.io.out_add, <span class="number">5</span>)</span><br><span class="line">  expect(c.io.out_sub, <span class="number">1</span>)</span><br><span class="line">  expect(c.io.out_mul, <span class="number">8</span>)</span><br><span class="line">  <span class="comment">//using peek if you don't want to compare out signal</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">val</span> testResult = <span class="type">Driver</span>(() =&gt; <span class="keyword">new</span> <span class="type">MyOperators</span>) &#123;c =&gt; <span class="keyword">new</span> <span class="type">MyOperatorsTester</span>(c)&#125;</span><br><span class="line">assert(testResult)</span><br><span class="line">println(<span class="string">"SUCCESS!!"</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看firrtl</p>
+<p><code>println(getVerilog(new Passthough))</code></p>
+<p><code>println(getFirrtl(new Passthrough))</code></p>
+</li>
+<li><p>print的几种出现场合</p>
+</li>
+</ol>
+<ul>
+<li>println(s”${io.in}”)在电路中：出现在generation的环节，即编译器Design Elaborating时，可以知道io.in是chisel3.core.UInt@e</li>
+<li>printf(p”$io”)在电路中，出现在simulation环节，显示Bundle(in-&gt;3, out-&gt;3)</li>
+<li>printf()在testbench中，显示[info] blabla</li>
+</ul>
+<ol>
+<li><p>Arbiter的逻辑</p>
+<p>FIFO的输入，一分为二输出</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pe0_valid := fifo_valid &amp; pe0_ready</span><br><span class="line">pe1_valid := fifo_valid &amp; pe1_ready &amp; (~pe0_ready)`</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>list</p>
+<p>列表的值一旦被定义，就不能被改变</p>
+<p><code>var site: List[Int] = List(1, 2, 3, 4) //=1 :: (2 :: (3 :: (4 :: Nil)))</code></p>
+<p>连接列表<code>listcat = List.concat(l1, l2) //l1 ::: l2</code></p>
+<p><code>list.fill(3)(&quot;abc&quot;)</code></p>
+<p><code>list.tabulate(6)(n =&gt; n * n)</code>通过给定的函数创建列表</p>
+<p><code>List(1, 2, 3, 4).permutations.foreach { case i0 :: i1 :: i2 :: i3 :: Nil =&gt; ... }</code>实现四个数的全排列</p>
+<p><code>list.filter(s =&gt; s.length == 3)</code>输出指定条件的所有元素</p>
+<p><code>list.foreach(s =&gt; s)</code>将函数应用到列表的所有元素</p>
+</li>
+</ol>
+<p>常用的函数式语法：map, zip, reduce, fold, scan</p>
+<ol>
+<li><p>状态机</p>
+<p><code>val idle :: coding :: writing :: grad :: Nil = Enum(4)</code></p>
+</li>
+<li><p>RegNext(next: T, init: T)用法</p>
+<p>生成一个隐式的reg用于储存括号内的数，在下一拍生效</p>
+</li>
+<li><p><strong>在写时序的时候注意一个状态的分步写，很可能被认为是重复赋值，只取最后一次赋值！</strong></p>
+</li>
+<li><p>多时钟/reset</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> chisel3.experimental.&#123;withClock, withReset, withClockAndReset&#125;</span><br><span class="line"></span><br><span class="line">withClock(io.alternateClock) &#123;</span><br><span class="line">    <span class="keyword">val</span> altClk = <span class="type">RegInit</span>(<span class="number">0.</span><span class="type">U</span>(<span class="number">10.</span><span class="type">W</span>))</span><br><span class="line">    altClk := io.in</span><br><span class="line">    io.outAlternateClock := altClk</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>参数检查：在Elaboration前</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">className</span>(<span class="params"><span class="type">Param1</span>: <span class="type">Int</span></span>) <span class="keyword">extends</span> <span class="title">Module</span> </span>&#123;</span><br><span class="line">  require(<span class="type">Param1</span> &gt;= <span class="number">0</span>)</span><br><span class="line">  <span class="keyword">val</span> io = blabla</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Match/Case语句</p>
+<p>用处：</p>
+<ul>
+<li>switch case</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> x = y <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0</span> =&gt; <span class="string">"zero"</span></span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span> =&gt; &#123;</span><br><span class="line">        <span class="string">"one"</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> _ =&gt; <span class="string">"many"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>type matching</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> _: <span class="type">String</span> =&gt; blabla</span><br><span class="line">    <span class="keyword">case</span> _: <span class="type">Int</span> =&gt; blabla</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>可选硬件IO条目</p>
+<p><code>val carryIn = if (hasCarry) Some(Input(UInt(1.W))) else None</code></p>
+<p>或者这样写（访问0位宽的变量总得到0）：</p>
+<p><code>val carryIn = Input(if (hasCarry) UInt(1.W) else UInt(0.W))</code></p>
+</li>
+<li><p>隐式参数</p>
+<p>个人感觉没大用处。。</p>
+<p>具体写法详见bootcamp.3.1_parameters.ipynb</p>
+<p>事先声明一个隐变量。一个类型只能指定一个隐变量的值</p>
+<p>在定义函数时加隐式参数声明</p>
+<p>在调用函数时可以不写隐参数（也可以写），让编译器自己去找该类型对应的隐变量的声明的值。</p>
+<p>提到的一个用处：做日志显示的开关</p>
+</li>
+<li><p>函数也可以做参数/变量</p>
+<p>在自动机的例子中，转换表成为自动机的参数，这样写：<code>stateTransition: (Int, Int) =&gt; Int</code></p>
+<p>电路实现时，使用函数<code>stateTransition(i, j)</code>得到Int值</p>
+<p>调用电路时，定义函数<code>stateTransition</code></p>
+</li>
+<li><p>闭包与匿名函数</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> factor = <span class="number">3</span></span><br><span class="line"><span class="keyword">val</span> multiplier = (i:<span class="type">Int</span>) =&gt; i * factor</span><br></pre></td></tr></table></figure>
+<p>生成的multipiler是一个函数,multiplier(x) = 3x</p>
+</li>
+<li><p>Trait特征</p>
+<p>类似于Java的抽象类，可以被多重继承</p>
+<p>构造顺序：</p>
+<ul>
+<li>超类的构造</li>
+<li>特征从左到右构造<ul>
+<li>先构造父特征、父特征不会被重复构造</li>
+</ul>
+</li>
+<li>构造子类</li>
+</ul>
+</li>
+<li><p>Decoupled</p>
+<p><code>Decoupled(任何对象)</code>成为DecoupledIO Bundle</p>
+<p>增加valid: Output(Bool), ready: Input(Bool), bits: Output(任何对象)</p>
+</li>
+<li><p>Queue：即FIFO，注意FIFO是时序逻辑</p>
+<p><code>val io.out = Decoupled(UInt(8.W))</code></p>
+<p><code>val io.in = Flipped(Decoupled(UInt(8.W)))</code>Flipped对调输入输出</p>
+<p><code>val queue = Queue(io.in, 2)</code></p>
+<p><code>io.out &lt;&gt; queue</code></p>
+<p>保证io.in和io.out都是DecoupledIO</p>
+</li>
+<li><p>Arbiters：把n个DecoupledIO送入1个DecoupledIO</p>
+<p>分为Arbiter: 优先考虑低索引的生产者，和RRArbiter：Round-robin挑选</p>
+<p>这是纯组合逻辑</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> io = <span class="type">IO</span>(<span class="keyword">new</span> <span class="type">Bundle</span> &#123;</span><br><span class="line">    <span class="keyword">val</span> in = <span class="type">Flipped</span>(<span class="type">Vec</span>(<span class="number">2</span>, <span class="type">Decoupled</span>(<span class="type">UInt</span>(<span class="number">8.</span><span class="type">W</span>))))</span><br><span class="line">    <span class="keyword">val</span> out = <span class="type">Decoupled</span>(<span class="type">UInt</span>(<span class="number">8.</span><span class="type">W</span>))</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">val</span> arbiter = <span class="type">Module</span>(<span class="keyword">new</span> <span class="type">Arbiter</span>(<span class="type">UInt</span>(<span class="number">8.</span><span class="type">W</span>), <span class="number">2</span>)) <span class="comment">// 2 to 1 Priority Arbiter</span></span><br><span class="line">    arbiter.io.in &lt;&gt; io.in</span><br><span class="line">    io.out &lt;&gt; arbiter.io.out</span><br></pre></td></tr></table></figure>
+<p>Arbiter.io(i).ready恒为0</p>
+</li>
+<li><p>内置Utility函数</p>
+<ul>
+<li>PopCount(sth)</li>
+<li>Reverse(sth)</li>
+<li>Integer.parseInt(“00000000”, 2)转为2进制</li>
+<li>io.out.toInt.toBinaryString</li>
+<li>UInt和OneHot相互转化：UIntToOH(), OHToUInt()</li>
+</ul>
+</li>
+<li><p>Muxes</p>
+<p>Priority Mux：<code>PriorityMux</code>低索引的优先(List[Bool, Data])</p>
+<p>OneHot Mux：<code>Mux1H</code>必须保证输入是OneHot的</p>
+<p>Mux也可以接收Vec型的条件和输入，达到多选的效果</p>
+</li>
+<li><p>Counter</p>
+<p><code>val counter = Counter(3)</code>Range是[0..2]</p>
+<p><code>conunter.inc()</code></p>
+<p><code>counter.value</code></p>
+</li>
+<li><p>def和val生成的函数的区别</p>
+<p><code>val x = Random.nextInt</code>不会重复执行（成为值）</p>
+<p><code>def y = Random.nextInt</code>会生成新的随机值（类似指针指向该函数）</p>
+</li>
+<li><p>11/08/18这天看完了3.4_functional_programming.ipynb</p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>和土豪当朋友！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/QRCode/RewardCode.jpg" alt="Yiwei Li WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+	
+	
+      <div>
+        <div>
+	
+		<div style="text-align: center; color: #000; font-size: 14px;">---以上---</div>
+    
+</div>
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/笔记/" rel="tag"># 笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/15/lyric-sharing-03/" rel="next" title="歌词分享003期">
+                <i class="fa fa-chevron-left"></i> 歌词分享003期
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/08/bootcamp - note/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNzg1OC8xNDM4OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Yiwei Li" />
+            
+              <p class="site-author-name" itemprop="name">Yiwei Li</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="http://github.com/leepoly/" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                我的儿子们
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ppnuts.com/" title="帅气的lph" target="_blank">帅气的lph</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lgd.gd/" title="帅气的lgd" target="_blank">帅气的lgd</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yiwei Li</span>
+
+  
+</div>
+
+
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+<div class="weixin-box">
+  <div class="weixin-menu">
+    <div class="weixin-hover">
+      <div class="weixin-description">和土豪当朋友！</div>
+    </div>
+  </div>
+</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
