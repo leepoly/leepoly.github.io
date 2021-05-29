@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/icons/safari-pinned-tab.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="research, zsim," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="I have spent much time building nvmain-zsim (2nd times!), and here is what I did (common errors). What is zsim-nvmain?ZSim is an emulator made by stanford, which is originally used to evaluate the imp">
+<meta name="keywords" content="research, zsim">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Build zsim-nvmain">
+<meta property="og:url" content="http://yoursite.com/2019/08/25/Build-zsim-nvmain/index.html">
+<meta property="og:site_name" content="Lyw">
+<meta property="og:description" content="I have spent much time building nvmain-zsim (2nd times!), and here is what I did (common errors). What is zsim-nvmain?ZSim is an emulator made by stanford, which is originally used to evaluate the imp">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-25T13:37:29.584Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Build zsim-nvmain">
+<meta name="twitter:description" content="I have spent much time building nvmain-zsim (2nd times!), and here is what I did (common errors). What is zsim-nvmain?ZSim is an emulator made by stanford, which is originally used to evaluate the imp">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/08/25/Build-zsim-nvmain/"/>
+
+
+
+
+
+  <title>Build zsim-nvmain | Lyw</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Lyw</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-game">
+          <a href="/game/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br />
+            
+            game
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/25/Build-zsim-nvmain/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiwei Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lyw">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Build zsim-nvmain</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-25T21:02:22+08:00">
+                2019-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>I have spent much time building nvmain-zsim (2nd times!), and here is what I did (common errors).</p>
+<h4 id="What-is-zsim-nvmain"><a href="#What-is-zsim-nvmain" class="headerlink" title="What is zsim-nvmain?"></a>What is zsim-nvmain?</h4><p>ZSim is an emulator made by stanford, which is originally used to evaluate the implementation of ZCache. </p>
+<p>NVMain is a set of interfaces based on ZSim or Gem5, which provides support on emulating Non-Volatile Memory. Now we can easily add a 3d stacked DRAM or PCM Main Memory to the system…</p>
+<p>ZSim github repo: <a href="https://github.com/s5z/zsim" target="_blank" rel="noopener">https://github.com/s5z/zsim</a><br>NVMain github repo: <a href="https://github.com/AXLEproject/axle-zsim-nvmain" target="_blank" rel="noopener">https://github.com/AXLEproject/axle-zsim-nvmain</a></p>
+<h4 id="Before-you-read…"><a href="#Before-you-read…" class="headerlink" title="Before you read…"></a>Before you read…</h4><ul>
+<li><p>I finish my building mostly from this blog: <a href="https://blog.csdn.net/qqq_11101/article/details/78481377" target="_blank" rel="noopener">https://blog.csdn.net/qqq_11101/article/details/78481377</a></p>
+</li>
+<li><p>I built zsim-nvmain into a docker, avoiding most meaningless dependencies problems. I have pushed my docker image to hub: leepoly/zsim-nvmain</p>
+</li>
+</ul>
+<h4 id="How-to-build-nvmain-zsim"><a href="#How-to-build-nvmain-zsim" class="headerlink" title="How to build nvmain-zsim"></a>How to build nvmain-zsim</h4><ol>
+<li><p>download source code<br><code>git clone https://github.com/cyjseagull/SHMA</code></p>
+</li>
+<li><p>deal with depenencies<br>My environment:</p>
+<ul>
+<li>ubuntu 18.04 (linux kernel 4.4.0)</li>
+<li><p>gcc, g++ 4.8.5</p>
+<blockquote>
+<p>How to deal with multiple gcc/g++ version?<br><code>update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 10</code>, where 10 is a number indicating the priority<br>we should do the same to g++</p>
+</blockquote>
+</li>
+<li><p>pin-2.13-61206-gcc.4.4.7-linux (which is embedded in SHMA project)</p>
+</li>
+<li>boost 1.59<br>if you have encountered “fatal error: bzlib.h: No such file or directory”, try <code>apt install libboost-all-dev libbz2-dev</code></li>
+<li>libconfig 1.7.2</li>
+<li>hdf5 1.10.5<br>most of those tools are installed in <code>/usr/local/</code> by default.</li>
+</ul>
+</li>
+<li><p>configure env.sh<br>Now we should modify env.sh to assign where we install our dependencies. I recommend set a <code>BASEPATH</code> and use that indirect path.<br>Then <code>source env.sh</code> to export those parameters into environment</p>
+</li>
+<li><p>build nvmain-zsim<br><code>cd $BASEPATH</code><br><code>scons -j4</code></p>
+</li>
+</ol>
+<ul>
+<li><p>encounting “fatal error: src/memory_hierarchy.h: No such file or directory”<br>go to <code>build/opt/tlb/common_func.h</code>, change header into <code>&quot;#include &quot;memory_hierarchy.h&quot;</code></p>
+</li>
+<li><p>encounting “fatal error: src/nvmain_mem_ctrl.h: No such file or directory”<br>go to <code>build/opt/tlb/page_table_walker.h</code> and change the header in the same way</p>
+</li>
+<li><p>encounting “fatal error: glog/logging.h: No such file or directory”<br>try <code>apt-get install libgoogle-glog-dev</code></p>
+</li>
+<li><p>encounting “build/opt/version.h:1:4: error: stray ‘#’ in program”<br>change “echo -e” into “echo” in SConstruct</p>
+</li>
+<li><p>(docker-only) [H] Panic on build/opt/zsim_harness.cpp:292: Could not change personality to disable address space randomization!<br>try rerun docker with privileged mode<br><code>docker run -it --privileged CONTAINER_ID bash</code><br><code>echo 0 | tee /proc/sys/kernel/randomize_va_space</code></p>
+</li>
+<li><p>E:4.4 is not a supported linux release<br>insert at <code>pin_cmd.cpp:52</code></p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">args.push_back(<span class="string">"-injection"</span>);</span><br><span class="line">args.push_back(<span class="string">"child"</span>);</span><br><span class="line">args.push_back(<span class="string">"-ifeellucky"</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>build until you see <code>scons: done reading SConscript files.</code></p>
+<ol start="5">
+<li><p>Check installation<br><code>./bin/zsim config/shma-static.cfg</code><br><strong>congrats!</strong></p>
+</li>
+<li><p>A known problem<br>according to this issue: <a href="https://github.com/s5z/zsim/issues/154" target="_blank" rel="noopener">https://github.com/s5z/zsim/issues/154</a><br>zsim is not supported to run <code>ls</code>.</p>
+</li>
+</ol>
+<p>If you have any question, feel free to comment here.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+	
+	
+      <div>
+        <div>
+	
+		<div style="text-align: center; color: #000; font-size: 14px;">---以上---</div>
+    
+</div>
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/research-zsim/" rel="tag"># research, zsim</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/16/how-to-update-glib-without-sudo/" rel="next" title="how-to-update-glib-without-sudo">
+                <i class="fa fa-chevron-left"></i> how-to-update-glib-without-sudo
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/10/12/play-around-with-raspberry/" rel="prev" title="如何将你的树莓派变成强大的云办公设备 How to make your Raspberry Pi a powerful edge device to WFH">
+                如何将你的树莓派变成强大的云办公设备 How to make your Raspberry Pi a powerful edge device to WFH <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNzg1OC8xNDM4OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Yiwei Li" />
+            
+              <p class="site-author-name" itemprop="name">Yiwei Li</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="http://github.com/leepoly/" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                我的儿子们
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ppnuts.com/" title="帅气的lph" target="_blank">帅气的lph</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lgd.gd/" title="帅气的lgd" target="_blank">帅气的lgd</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#What-is-zsim-nvmain"><span class="nav-number">1.</span> <span class="nav-text">What is zsim-nvmain?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Before-you-read…"><span class="nav-number">2.</span> <span class="nav-text">Before you read…</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#How-to-build-nvmain-zsim"><span class="nav-number">3.</span> <span class="nav-text">How to build nvmain-zsim</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yiwei Li</span>
+
+  
+</div>
+
+
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/icons/safari-pinned-tab.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="考试复习," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="目的：用于大三上的《人工智能基础》课程的复习，重点在后半期的“机器学习”部分 Notes:1.概率计算两个规则Sum ruleProduct rule2.特征提取：输入数据转化为向量X的过程3.两个模型回归模型分类模型4.回归树的最优划分 动态规划 Chapter0 绪论1.AI历史第一次浪潮：搜索技术、知识表示、确定性推理、感知机第一次寒冬：感知机模型局限、复杂度NP第二次浪潮：专家系统、不确定">
+<meta name="keywords" content="考试复习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="人工智能基础-期末复习笔记">
+<meta property="og:url" content="http://yoursite.com/2018/07/05/ai-notes/index.html">
+<meta property="og:site_name" content="Lyw">
+<meta property="og:description" content="目的：用于大三上的《人工智能基础》课程的复习，重点在后半期的“机器学习”部分 Notes:1.概率计算两个规则Sum ruleProduct rule2.特征提取：输入数据转化为向量X的过程3.两个模型回归模型分类模型4.回归树的最优划分 动态规划 Chapter0 绪论1.AI历史第一次浪潮：搜索技术、知识表示、确定性推理、感知机第一次寒冬：感知机模型局限、复杂度NP第二次浪潮：专家系统、不确定">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/notes/ai_01.png">
+<meta property="og:updated_time" content="2018-07-06T01:56:03.204Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="人工智能基础-期末复习笔记">
+<meta name="twitter:description" content="目的：用于大三上的《人工智能基础》课程的复习，重点在后半期的“机器学习”部分 Notes:1.概率计算两个规则Sum ruleProduct rule2.特征提取：输入数据转化为向量X的过程3.两个模型回归模型分类模型4.回归树的最优划分 动态规划 Chapter0 绪论1.AI历史第一次浪潮：搜索技术、知识表示、确定性推理、感知机第一次寒冬：感知机模型局限、复杂度NP第二次浪潮：专家系统、不确定">
+<meta name="twitter:image" content="http://yoursite.com/images/notes/ai_01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/05/ai-notes/"/>
+
+
+
+
+
+  <title>人工智能基础-期末复习笔记 | Lyw</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Lyw</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-game">
+          <a href="/game/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br />
+            
+            game
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/05/ai-notes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiwei Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lyw">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">人工智能基础-期末复习笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-05T16:15:44+08:00">
+                2018-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>目的：用于大三上的《人工智能基础》课程的复习，重点在后半期的“机器学习”部分</p>
+<h4 id="Notes"><a href="#Notes" class="headerlink" title="Notes:"></a>Notes:</h4><p>1.概率计算两个规则<br>Sum rule<br>Product rule<br>2.特征提取：输入数据转化为向量X的过程<br>3.两个模型<br>回归模型<br>分类模型<br>4.回归树的最优划分 动态规划</p>
+<h4 id="Chapter0-绪论"><a href="#Chapter0-绪论" class="headerlink" title="Chapter0 绪论"></a>Chapter0 绪论</h4><p>1.AI历史<br>第一次浪潮：搜索技术、知识表示、确定性推理、感知机<br>第一次寒冬：感知机模型局限、复杂度NP<br>第二次浪潮：专家系统、不确定性推理、神经网络BP<br>第二次寒冬：维护成本高<br>2.机器学习三要素<br>优化目标建立：基于数据，计算目标函数最小的模型w<br>优化求解过程<br>模型预测过程<br>3.ML概述</p>
+<a id="more"></a>
+<p>标签学习<br>    分类回归思想建模（最小化回归误差、最小化分类信息熵）<br>        决策树、回归树、GBRT<br>    概率思想建模（最大化数据似然）<br>        逻辑回归、朴素贝叶斯<br>    集成方法<br>        Bagging、Adaboost<br>结构学习<br>    概率图模型（条件独立假设）<br>        有向图<br>            无监督（隐变量与EM）<br>                PLSA<br>                混合高斯<br>            有监督<br>                朴素贝叶斯<br>                逻辑回归<br>                概率矩阵分解<br>        无向图<br>            条件随机场<br>    神经网络（NN是计算流程的可视化）<br>        前馈NN、RNN（序列标注、机器翻译、对话生成）、CNN<br>前沿研究<br>    闲聊机器人</p>
+<h4 id="Chapter1-单变量学习（标签学习）"><a href="#Chapter1-单变量学习（标签学习）" class="headerlink" title="Chapter1 单变量学习（标签学习）"></a>Chapter1 单变量学习（标签学习）</h4><h5 id="一-决策树"><a href="#一-决策树" class="headerlink" title="一 决策树"></a>一 决策树</h5><p>1.信息熵<br>定义 已知随机变量Y的分布P(Y)，度量“预测随机变量Y的取值”的难度<br>香农信息熵<br>条件信息熵 度量“在随机变量X的前提下，预测随机变量Y”的难度<br>信息增益 度量X对预测Y的能力<br>2.构造决策树<br>准则<br>分类准确<br>树结构简单（数节点数少，叶节点的预测值绝对值小）<br>贪心算法：以最大化IG，即最小化条件熵的目的选择根节点属性<br>H(Y|Xi)哪一个Xi小<br>3.连续值决策树<br>4.决策树剪枝<br>5.对应ML三要素<br>目标函数：落入叶节点的样本的信息熵均值最小<br>优化过程：以条件熵为准则的贪心算法，不可导<br>模型预测：给定新样本，以落入的叶节点的类别为预测值</p>
+<h5 id="二-回归树"><a href="#二-回归树" class="headerlink" title="二 回归树"></a>二 回归树</h5><p>1.如何确定叶节点的wj – 目标函数<br>推导目标函数<br>从数据的角度-&gt;从树的角度<br>当叶节点为 时目标函数最小<br>2.如何分裂树的节点 – 优化过程<br>分裂前<br>分裂后<br>要减少量 尽量大<br>也是贪心策略</p>
+<h5 id="三-GBRT"><a href="#三-GBRT" class="headerlink" title="三 GBRT"></a>三 GBRT</h5><p>1.GBRT Gradient Boost Regression Tree<br>渐进梯度回归树<br>GBDT 渐进梯度决策树<br>MART Multiple Additive Regression Tree多决策累加回归树<br>基本假设：多个回归树相加<br>2.目标函数<br>设有K棵树<br>最小化 训练误差+模型复杂度<br>3.优化过程<br>贪心：考虑树的添加过程<br>设前t-1棵树都算出了，预测值为〖y ̂_i〗^((t-1) )，则〖y ̂_i〗^((t) )=〖y ̂_i〗^((t-1) )+f_t (x_i)<br>相当于构建一棵(xi, yi-〖y ̂_i〗^((t-1) ))的回归树<br>极值点取法和上一节一样<br>4.Hw：最佳的k划分<br>5.模型预测</p>
+<h5 id="四-LR-逻辑回归"><a href="#四-LR-逻辑回归" class="headerlink" title="四 LR 逻辑回归"></a>四 LR 逻辑回归</h5><p>1.Sigmoid函数<br>2.目标函数<br>最大化目标似然<br>转化为最小化<br>3.优化过程 梯度下降<br>最小化，往梯度的反方向走<br>梯度下降变体：MiniBatch<br>随机选择部分样例并计算梯度<br>4.线性回归 vs 逻辑回归<br>目标函数：<br>分类平面：<br>LR对异常点更加robust<br>共同点：都是线性分类器<br>5.正则化<br>目的：目标函数考虑自身权重带来的影响，避免权重太多太大，过拟合<br>6.特征工程师<br>套路：决策树+随机森林+GBDT+线性回归<br>特征非线性临界点划分、不同种类特征的自动组合</p>
+<h5 id="五-NB-朴素贝叶斯"><a href="#五-NB-朴素贝叶斯" class="headerlink" title="五 NB 朴素贝叶斯"></a>五 NB 朴素贝叶斯</h5><p>1.求p(y|x)的方法<br>p(y│x)=p(y│x^1,x^2,⋯x^m )=(p(x^1,x^2,⋯x^M│y)p(y))/p(x^1,x^2,⋯x^M ) ∝p(x^1,x^2,⋯x^M│y)p(y)<br>= p(x^1  │y)⋯p(x^M│y)p(y)条件独立性假设<br>2.拉格朗日乘数法<br>证明按频率选可以得到极值<br>3.连续值<br>设xj为连续值，通常假设p(xj|y)服从正态分布</p>
+<h5 id="六-Ensemble-集成学习"><a href="#六-Ensemble-集成学习" class="headerlink" title="六 Ensemble 集成学习"></a>六 Ensemble 集成学习</h5><p>1.策略：改变数据集<br>Bagging：Bootstrap取样，即有放回<br>    没被采样的概率<br>Random Forests<br>    随机造K个树：属性选取随机，属性划分随机<br>    那些取样随机的树会被处理为噪声<br>2.策略：改变算法（权值）<br>Boosting: Adaboost<br>训练误差的上界</p>
+<h4 id="Chapter-2-结构学习"><a href="#Chapter-2-结构学习" class="headerlink" title="Chapter 2 结构学习"></a>Chapter 2 结构学习</h4><h5 id="七-概率图模型"><a href="#七-概率图模型" class="headerlink" title="七 概率图模型"></a>七 概率图模型</h5><p>1.定义<br>节点：随机变量<br>边：随机变量的关系<br>2.分类<br>有向边：贝叶斯网络<br>无向边：马尔科夫随机场<br>3.转换：<br>有向图到全概率公式、公式到有向图<br>任意概率式子，都可借助sum rule变成p(node|pa)的形式<br>4.盘子模型<br>5.条件独立<br>若 则称<br>等价形式：<br>6.概率图转化为条件独立<br>Tail to tail 成立<br>Head to tail 成立<br>Head to head 不成立<br>考虑A与B之间的每条（无向）路径，若A与B之间的每条路径都被“阻断”，那么：条件独立成立；反之，不成立。<br>定义：“A与B之间的某条路径”被阻断，当且仅当，这条路径中存在某个节点满足如下两个条件之一<br>这个节点在集合C中，且它呈现head-to-tail或tail-to-tail的模式<br>它呈现head-to-head的模式，且它和它的所有子孙节点都不在C中</p>
+<h5 id="八-概率矩阵分解"><a href="#八-概率矩阵分解" class="headerlink" title="八 概率矩阵分解"></a>八 概率矩阵分解</h5><p>1.电影评分的概率图模型<br>见笔记<br>2.目标函数<br>见笔记</p>
+<h5 id="九-共现矩阵"><a href="#九-共现矩阵" class="headerlink" title="九 共现矩阵"></a>九 共现矩阵</h5><p>1.共现矩阵的推导<br>2.主题模型PLSA<br>D-&gt;Z-&gt;W<br>隐变量Z有k个取值<br>需要学习的参数N +NK+KM<br>推导：EM算法（很重要）<br>3.引入隐变量的目的：获得可观察变量和隐变量的关系</p>
+<h4 id="十-混合高斯模型"><a href="#十-混合高斯模型" class="headerlink" title="十 混合高斯模型"></a>十 混合高斯模型</h4><p>1.模型输入输出<br>2.方法论：概率图建模<br>总结随机变量、引入隐变量、建立图模型、EM求解</p>
+<h4 id="十一-条件随机场"><a href="#十一-条件随机场" class="headerlink" title="十一 条件随机场"></a>十一 条件随机场</h4><p>1.无向图概率图模型<br>分解<br>条件独立<br>2.CRF</p>
+<h4 id="十二-神经网络"><a href="#十二-神经网络" class="headerlink" title="十二 神经网络"></a>十二 神经网络</h4><p>1.实际的观点：神经网络以图形化的方式刻画出从输入到输出的计算过程<br>2.RNN应用<br>序列标注<br>    PartOfSpeech标注；分词<br>翻译系统<br>    核心技术：短语对齐<br>    词嵌入：词-&gt;向量<br>    注意力机制Scoring：前面的字词不能忘<br>对话系统<br>    多机制建模（回答的丰富性）<br>    要求:可控（安全）、流畅、相关<br>3.Viterbi vs. BeamSearch(RNN)<br><img src="/images/notes/ai_01.png" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+	
+	
+      <div>
+        <div>
+	
+		<div style="text-align: center; color: #000; font-size: 14px;">---以上---</div>
+    
+</div>
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/考试复习/" rel="tag"># 考试复习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/20/lyric-sharing-02/" rel="next" title="歌词分享002期">
+                <i class="fa fa-chevron-left"></i> 歌词分享002期
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/05/os-note/" rel="prev" title="操作系统-复习笔记">
+                操作系统-复习笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Yiwei Li" />
+            
+              <p class="site-author-name" itemprop="name">Yiwei Li</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="http://github.com/leepoly/" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                我的儿子们
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ppnuts.com/" title="帅气的lph" target="_blank">帅气的lph</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lgd.gd/" title="帅气的lgd" target="_blank">帅气的lgd</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Notes"><span class="nav-number">1.</span> <span class="nav-text">Notes:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chapter0-绪论"><span class="nav-number">2.</span> <span class="nav-text">Chapter0 绪论</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chapter1-单变量学习（标签学习）"><span class="nav-number">3.</span> <span class="nav-text">Chapter1 单变量学习（标签学习）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#一-决策树"><span class="nav-number">3.1.</span> <span class="nav-text">一 决策树</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#二-回归树"><span class="nav-number">3.2.</span> <span class="nav-text">二 回归树</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#三-GBRT"><span class="nav-number">3.3.</span> <span class="nav-text">三 GBRT</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#四-LR-逻辑回归"><span class="nav-number">3.4.</span> <span class="nav-text">四 LR 逻辑回归</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#五-NB-朴素贝叶斯"><span class="nav-number">3.5.</span> <span class="nav-text">五 NB 朴素贝叶斯</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#六-Ensemble-集成学习"><span class="nav-number">3.6.</span> <span class="nav-text">六 Ensemble 集成学习</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chapter-2-结构学习"><span class="nav-number">4.</span> <span class="nav-text">Chapter 2 结构学习</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#七-概率图模型"><span class="nav-number">4.1.</span> <span class="nav-text">七 概率图模型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#八-概率矩阵分解"><span class="nav-number">4.2.</span> <span class="nav-text">八 概率矩阵分解</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#九-共现矩阵"><span class="nav-number">4.3.</span> <span class="nav-text">九 共现矩阵</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#十-混合高斯模型"><span class="nav-number">5.</span> <span class="nav-text">十 混合高斯模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#十一-条件随机场"><span class="nav-number">6.</span> <span class="nav-text">十一 条件随机场</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#十二-神经网络"><span class="nav-number">7.</span> <span class="nav-text">十二 神经网络</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yiwei Li</span>
+
+  
+</div>
+
+
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

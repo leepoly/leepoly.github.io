@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/icons/safari-pinned-tab.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="research, zsim, c++," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Recently I have finished some code refactoring, reverting a third-party project following c++17 standard to an out-dated pincrt fashion. More accurately, I was integrating the most recent NVM simulati">
+<meta name="keywords" content="research, zsim, c++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="代码回迁历程：从c++17到pincrt (Paradiams for rebasing recent c++ code to out-dated pincrt)">
+<meta property="og:url" content="http://yoursite.com/2021/01/22/rebase-cpp17-project-to-pincrt/index.html">
+<meta property="og:site_name" content="Lyw">
+<meta property="og:description" content="Recently I have finished some code refactoring, reverting a third-party project following c++17 standard to an out-dated pincrt fashion. More accurately, I was integrating the most recent NVM simulati">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-01-23T03:44:44.162Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="代码回迁历程：从c++17到pincrt (Paradiams for rebasing recent c++ code to out-dated pincrt)">
+<meta name="twitter:description" content="Recently I have finished some code refactoring, reverting a third-party project following c++17 standard to an out-dated pincrt fashion. More accurately, I was integrating the most recent NVM simulati">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/01/22/rebase-cpp17-project-to-pincrt/"/>
+
+
+
+
+
+  <title>代码回迁历程：从c++17到pincrt (Paradiams for rebasing recent c++ code to out-dated pincrt) | Lyw</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Lyw</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-game">
+          <a href="/game/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br />
+            
+            game
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/01/22/rebase-cpp17-project-to-pincrt/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiwei Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lyw">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">代码回迁历程：从c++17到pincrt (Paradiams for rebasing recent c++ code to out-dated pincrt)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-01-22T22:34:09+08:00">
+                2021-01-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Recently I have finished some code refactoring, reverting a third-party project following c++17 standard to an out-dated pincrt fashion. More accurately, I was integrating the most recent NVM simulation work <a href="https://swanson.ucsd.edu/data/bib/pdfs/MICRO20-LensVans.pdf" target="_blank" rel="noopener">VANS</a> with <a href="https://github.com/s5z/zsim" target="_blank" rel="noopener">zsim</a>. During this code migration process, I have learned to handle many implementation issues related to C++ STL and would like to share it.</p>
+<h3 id="Brief-Glossary"><a href="#Brief-Glossary" class="headerlink" title="Brief Glossary"></a>Brief Glossary</h3><ul>
+<li><code>zsim</code>: a fast and accurate core simulator. The runtime is based on <code>pincrt</code>. I have been using zsim as my primary experiment tool but for simplicity it does not directly support any detailed DDR memory models.</li>
+<li><code>VANS</code>: an Optane-oriented NVM memory simulator. It is claimed to be written in C++17 fashion and have the most accurate result against the actual Optane NVM hardware. This time I want to integrate it with zsim, supporting simulating app behaviors on a core+NVM system.</li>
+<li><code>pincrt</code>: The basic C runtime specialized for a pintool like zsim, derived from stlport, now “maintained” by intel. It also contains several C++ STL support. Based on the official manual (only 11-page long) and my hands-on experience, pincrt only supports limited C++11 standards and no support for more recent standards. Pincrt does not support exceptions and RTTI (Run-time type information).</li>
+</ul>
+<h3 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h3><a id="more"></a>
+<ol>
+<li>I want to integrate VANS with zsim, to test a research idea working on a NVM system (e.g., For a specific workload, check the total energy consuming and latency distribution)</li>
+<li>I want to learn and train my C++ skills by reviewing a complete and well-written C++17 project.</li>
+<li>Most tutorials are telling people how to migrate their old-fashioned C++98 code into a recent one (like C++20). I would like to do the reverse thing, answering these questions: what are those new features? Why do we need such grammar sugars? Are they practical? How are they implemented (in a simple way)?</li>
+</ol>
+<h3 id="Rebasing-process"><a href="#Rebasing-process" class="headerlink" title="Rebasing process"></a>Rebasing process</h3><p>The first time I directly copied VANS source files into zsim and tried compiling, I saw 30K+ error lines… So let’s do it right now. I categorized pincrt’s missing language features into loosely-coupled ones and closely-coupled ones. Now I would show some of them via the related code examples respectively.</p>
+<h4 id="Loosely-coupled-features"><a href="#Loosely-coupled-features" class="headerlink" title="Loosely-coupled features"></a>Loosely-coupled features</h4><p>For loosely-coupled features, I mean no or little code change to the direct files. I hope to complete those missing features (function impl, constants, …) into one file <code>missingfunc.h</code> and just include it at the beginning, to minimize the injection. Obviously keeping the integrity of original VANS is the better way.</p>
+<ol>
+<li>String to number conversion</li>
+</ol>
+<p>In C++17, this conversion is (not very) gracefully done by the method <code>std::stoX</code>. E.g., a <code>std::string</code> to <code>long</code> conversion would be <code>std::stol</code>. On the other hand, number-to-string conversion is gracefully solved by polymorphism <code>std::to_string</code> introduced by C++11.</p>
+<p>In the ancient C++ times, there are alternative ways to achieve that. See <a href="https://stackoverflow.com/questions/7663709/how-can-i-convert-a-stdstring-to-int" target="_blank" rel="noopener">https://stackoverflow.com/questions/7663709/how-can-i-convert-a-stdstring-to-int</a></p>
+<p>For simple conversion I adopt the method from above and add an inline function in namespace <code>std</code>: <code>std::istringstream([a const char*]) &gt;&gt; [your target long variable];</code>. Similarly we finish other necessary number conversion. On the other hand, use <code>stringstream</code> to convert a string into a number in any type.</p>
+<p>For complex conversion, the method can return <code>pos</code> and do a radix parsing by <code>base</code> parameters (see <a href="https://en.cppreference.com/w/cpp/string/basic_string/stol)" target="_blank" rel="noopener">https://en.cppreference.com/w/cpp/string/basic_string/stol)</a>. VANS uses <a href="https://github.com/TheNetAdmin/VANS/blob/1967e068cf345d6f606f7f00f11625cdb5dc5e73/src/general/trace.cpp#L22" target="_blank" rel="noopener">one instance</a>. Here I replace it with <code>sscanf</code> to control more string format, but in an intrusive way sadly.</p>
+<blockquote>
+<p>If possible I want to know a brief implementation of a complete <code>std::stoX</code> method in the future.</p>
+</blockquote>
+<ol start="2">
+<li>Missing methods in vector, map and unordered_map</li>
+</ol>
+<p>Pincrt does not implement many methods in <code>std::vector</code>, <code>std::map</code> and <code>std::unordered_map</code>.</p>
+<ul>
+<li><code>at</code>: To index the content we usually use the <code>[]</code> operator, however, STL uses another <code>at()</code> method to throw the exception when the index does not exist. To implement this method, we derive the original <code>std::vector</code> to our <code>g_vector</code> thanks to zsim, and add this method in our header. We replace every exception throw with assertion, since pincrt does not handle any exceptions:</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> K, <span class="keyword">typename</span> V&gt; <span class="class"><span class="keyword">class</span> <span class="title">g_map</span> :</span> <span class="keyword">public</span> <span class="built_in">std</span>::<span class="built_in">map</span>&lt;K, V, <span class="built_in">std</span>::less&lt;K&gt;, StlGlobAlloc&lt;<span class="built_in">std</span>::pair&lt;<span class="keyword">const</span> K, V&gt; &gt; &gt; &#123;</span><br><span class="line">    <span class="function">V&amp; <span class="title">at</span><span class="params">(<span class="keyword">const</span> K&amp; key)</span> </span>&#123;</span><br><span class="line">        assert(<span class="keyword">this</span>-&gt;count(key));</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>-&gt;find(key)-&gt;second;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>vector::data</code> returns the direct C-style array of a vector, given that the implementation of vector is a consistent memory area. It can be implemented by <code>return (T*) this-&gt;_M_start;</code></li>
+<li><code>unordered_map::reserve</code> pre-sets an expected map size at the beginning, to avoid multiple rehashing. I did not find a good way to do it but a void method is okay if we do not care too much about performance.</li>
+<li><code>emplace</code> is also a performance-targeted method. It inserts a new element to the container without unnecessary memory copy. Programmers pass all constructing parameters of the new element directly to <code>emplace</code>. I just heard this method today and do not like the way of programmers hinting memory movement via a totally new method. It adds complexity for code migration. Again replacing it to <code>insert</code> is totally harmless.</li>
+<li><code>std::array</code> is a new container since C++11, wrapping the C-style array. Here I just revert VANS code to use a traditional C-style array.</li>
+</ul>
+<blockquote>
+<p>To add a custom method I finally define a new class from the original STL. Is there any easier way to directly modify the STL class?</p>
+</blockquote>
+<ol start="3">
+<li>Tuple and unpacking</li>
+</ol>
+<p>C++11 invents <code>std::tuple</code> to represent a couple of variables in any type, besides the original <code>std::pair</code>. Since pincrt does not include tuple, I check the VANS code and realize it only uses 2 and 3 elements in <code>std::tuple</code>. Therefore, I create a new <code>triple</code> class which is essentially a <code>std::pair&lt;A, std::pair&lt;B, C&gt;&gt;</code> class. Then I define its <code>first</code>, <code>second</code> and <code>third</code> method for element accessing. Plus a similar <code>make_triple</code> easily packs a triple. To extract a tuple, STL provides both <code>std::get&lt;index&gt;</code> and <code>std::tie</code> to access. For pincrt we can also implement the first one easily, or modifying the VANS code to use triple’s own accessing method.</p>
+<ol start="4">
+<li>Register keyword</li>
+</ol>
+<p>I learned this keyword when I was an undergraduate, but never used it since that class. C++11 changes its semantics and C++17 finally removes this expression. However, although it is another example of “programmers control data movement”, <code>register</code> is defined in a better way than <code>emplace</code>. Sad about the loss… Now our C++17 compiler would throw warnings for <code>register</code>s in zsim’s <code>mtrand.h</code>. We have to add the <code>-Wno-register</code> flag to CXXFLAG in <code>SConstruct</code>.</p>
+<ol start="5">
+<li>Get the maximal value of a type</li>
+</ol>
+<p>This can be done by a static method <code>std::numeric_limits&lt;YourType&gt;::max()</code> in C++ since C++98. But C++11 <a href="https://stackoverflow.com/questions/31282305/assigning-an-enum-a-max-value-via-numeric-limits/31282362#31282362" target="_blank" rel="noopener">adds constexpr prefix</a> to allow its use in more places, e.g., the enum definition in VANS <code>common.h</code>. For pincrt, thankfully we can use its equivalent forms: XXX_MAX macros like <code>ULONG_MAX</code>. Note that the <code>max()</code> is in header <code>limits</code> and <code>ULONG_MAX</code> is in <code>climits</code>. This example just shows both the flexibility and historical baggage in ancient C++STL.</p>
+<h4 id="Closely-coupled-features"><a href="#Closely-coupled-features" class="headerlink" title="Closely-coupled features"></a>Closely-coupled features</h4><p>Unfortunately there are many times when we have to modify a lot of codes (considering context) to adapt to pincrt. There is not a standardized form.</p>
+<ol>
+<li>Exceptions</li>
+</ol>
+<p>I have to change the exception handling (<code>try</code>, <code>catch</code>, <code>throw</code>) based on the context. Since the exceptions influence the execution flow, I have to check the context code for modification. My overall principle is to replace <code>throw</code> by <code>assert</code>, to abort the program and also show some error messages.</p>
+<ol start="2">
+<li>Another unordered_map issue</li>
+</ol>
+<p>C++11 allows brace-enclosed map initialization, for example, there is <code>std::vector&lt;std::string&gt; a = {&quot;a&quot;, &quot;b&quot;, &quot;c&quot;}</code> in one class definition, to make class init more easy. I have not found good ways to replace it in-line. Instead I have to <code>push_back</code> them one-by-one in the class constructor.</p>
+<ol start="3">
+<li>Shared pointers</li>
+</ol>
+<p>C++ uses its <code>shared_ptr</code> for “smart pointers”. VANS heavily uses them, but pincrt does not support them. I have tried many ways to bypass it but all do not work. Then I found that STL’s shared pointers are absorbed from boost. So I try to replace every <code>std::shared_ptr</code> with <code>boost::shared_ptr</code> and include <code>boost/shared_ptr.hpp</code>. Remember to config the boost include path correctly in <code>SConstruct</code>. This solves all <code>shared_ptr</code> problems.</p>
+<p>The additional <code>make_shared</code> is more tricky. Directly including boost’s <code>make_shared.hpp</code> generates more problems, since boost uses C++11 allocators which pincrt do not have. This is a deadlock. Finally I check Boost’s code and control the allocation (and more) behaviors by macros and solve the pointer issues…phew</p>
+<p>The correct way of using <code>make_shared</code> is:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BOOST_NO_CXX11_ALLOCATOR</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BOOST_NO_CXX11_RVALUE_REFERENCES</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BOOST_NO_EXCEPTION</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="built_in">std</span> &#123;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">bad_alloc</span> :</span> <span class="keyword">public</span> <span class="built_in">std</span>::exception &#123;&#125;; <span class="comment">// Define a void class</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;boost/make_shared.hpp&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>From above we can see the flexibility of boost by controlling the options, just like many other linux utilities. But it creates too much workload to boost developers, and make the code more unreadable. Then what is the better way? I do not know.</p>
+<ol start="4">
+<li>Lambda function</li>
+</ol>
+<p>VANS uses lots of lambda functions in its code. It even uses a 2-d functor matrix for each state transition. Basically VANS has a lambda function (the type is <code>std::function</code>) in the <code>base_reqeust</code> class, to call back the target function when a request is finished. It also took me many days to bypass the lambda function type.</p>
+<p>Finally my professor told me how to do: for each callback function, create a functor (a function class), overload its operator <code>()</code> by the target callback function. If the lambda captures any variables (e.g., VANS captures <code>this</code> many times in <code>ait.cpp</code> and <code>rmw.cpp</code>), add those to the new functor’s constructor parameter list. Now that all the functors are derived from one <code>BaseCallbackFunction</code> class, we use it as the type of callback fields in <code>base_request</code>. This is the moment when I realize the beauty of C++’s complexity.</p>
+<h3 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h3><p>This blog only shows partial rebase problems and tricks. It took me almost 7 nights within one week to identify and fix all the misalignments. Finally zsim is capable of simulating NVM operations. The detailed method of zsim integration is another story. The final repository is in <a href="https://github.com/leepoly/zsim/tree/vans" target="_blank" rel="noopener">https://github.com/leepoly/zsim/tree/vans</a>. I realized such code migration can dramatically improve your understanding about C++ grammar sugars, understanding why and how it has been implemented. If you have better ways to do the conversion, please comment.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+	
+	
+      <div>
+        <div>
+	
+		<div style="text-align: center; color: #000; font-size: 14px;">---以上---</div>
+    
+</div>
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/research-zsim-c/" rel="tag"># research, zsim, c++</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/01/02/owning-music-rights-all-by-yourself/" rel="next" title="打破国内音乐的版权藩篱 Owning rights to music playing all by yourself">
+                <i class="fa fa-chevron-left"></i> 打破国内音乐的版权藩篱 Owning rights to music playing all by yourself
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/02/28/riscv-surprising-notes/" rel="prev" title="RISC-V的独到之处 (How is RISC-V different from what I know)">
+                RISC-V的独到之处 (How is RISC-V different from what I know) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNzg1OC8xNDM4OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Yiwei Li" />
+            
+              <p class="site-author-name" itemprop="name">Yiwei Li</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="http://github.com/leepoly/" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                我的儿子们
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ppnuts.com/" title="帅气的lph" target="_blank">帅气的lph</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lgd.gd/" title="帅气的lgd" target="_blank">帅气的lgd</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Brief-Glossary"><span class="nav-number">1.</span> <span class="nav-text">Brief Glossary</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Motivation"><span class="nav-number">2.</span> <span class="nav-text">Motivation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rebasing-process"><span class="nav-number">3.</span> <span class="nav-text">Rebasing process</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Loosely-coupled-features"><span class="nav-number">3.1.</span> <span class="nav-text">Loosely-coupled features</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Closely-coupled-features"><span class="nav-number">3.2.</span> <span class="nav-text">Closely-coupled features</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Result"><span class="nav-number">4.</span> <span class="nav-text">Result</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yiwei Li</span>
+
+  
+</div>
+
+
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

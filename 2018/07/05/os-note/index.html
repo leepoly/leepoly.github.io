@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/icons/safari-pinned-tab.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="Hexo, Lyw" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Notes: 安排fork和execve两步的目的：允许子进程处理文件描述符，完成对标准输入输出的重定向 XV6心得：当某个锁可能被某个中断处理函数获得时， acquire 这个锁之前需禁用中断  Ch1 绪论 系统：由一群有关联的个体组成，根据某种规则运作，能完成个别元件不能单独完成的工作的群体 OS定义：在应用和硬件之间的一层软件；给上层应用提供硬件的抽象；对底层硬件进行管理：共享和隔离 OS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统-复习笔记">
+<meta property="og:url" content="http://yoursite.com/2018/07/05/os-note/index.html">
+<meta property="og:site_name" content="Lyw">
+<meta property="og:description" content="Notes: 安排fork和execve两步的目的：允许子进程处理文件描述符，完成对标准输入输出的重定向 XV6心得：当某个锁可能被某个中断处理函数获得时， acquire 这个锁之前需禁用中断  Ch1 绪论 系统：由一群有关联的个体组成，根据某种规则运作，能完成个别元件不能单独完成的工作的群体 OS定义：在应用和硬件之间的一层软件；给上层应用提供硬件的抽象；对底层硬件进行管理：共享和隔离 OS">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/notes/os_01.png">
+<meta property="og:image" content="http://yoursite.com/images/notes/os_02.png">
+<meta property="og:image" content="http://yoursite.com/images/notes/os_03.png">
+<meta property="og:image" content="http://yoursite.com/images/notes/os_04.png">
+<meta property="og:image" content="http://yoursite.com/images/notes/os_05.png">
+<meta property="og:image" content="http://yoursite.com/images/notes/os_06.png">
+<meta property="og:updated_time" content="2018-07-05T15:20:28.391Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作系统-复习笔记">
+<meta name="twitter:description" content="Notes: 安排fork和execve两步的目的：允许子进程处理文件描述符，完成对标准输入输出的重定向 XV6心得：当某个锁可能被某个中断处理函数获得时， acquire 这个锁之前需禁用中断  Ch1 绪论 系统：由一群有关联的个体组成，根据某种规则运作，能完成个别元件不能单独完成的工作的群体 OS定义：在应用和硬件之间的一层软件；给上层应用提供硬件的抽象；对底层硬件进行管理：共享和隔离 OS">
+<meta name="twitter:image" content="http://yoursite.com/images/notes/os_01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/05/os-note/"/>
+
+
+
+
+
+  <title>操作系统-复习笔记 | Lyw</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Lyw</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-game">
+          <a href="/game/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br />
+            
+            game
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/05/os-note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiwei Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lyw">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">操作系统-复习笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-05T16:21:09+08:00">
+                2018-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="Notes"><a href="#Notes" class="headerlink" title="Notes:"></a>Notes:</h4><ol>
+<li>安排fork和execve两步的目的：允许子进程处理文件描述符，完成对标准输入输出的重定向</li>
+<li>XV6心得：当某个锁可能被某个中断处理函数获得时， acquire 这个锁之前需禁用中断</li>
+</ol>
+<h4 id="Ch1-绪论"><a href="#Ch1-绪论" class="headerlink" title="Ch1 绪论"></a>Ch1 绪论</h4><ol>
+<li>系统：由一群有关联的个体组成，根据某种规则运作，能完成个别元件不能单独完成的工作的群体</li>
+<li>OS定义：在应用和硬件之间的一层软件；给上层应用提供硬件的抽象；对底层硬件进行管理：共享和隔离</li>
+<li>OS能做什么：构建系统环境，让硬件可用；资源管理（公平）；系统保护（安全并行）；硬件处理（包装）</li>
+<li><p>计算机发展的阶段<br>OS是函数库，批处理<br>分时共享Unix、MULTICS<br>PC</p>
+<a id="more"></a>
+</li>
+<li><p>典型的UNIX系统结构<br><img src="/images/notes/os_01.png" alt=""><br>应用：程序员经编译的程序<br>库：精心设计的代码，预编译对象，链接器引入，加载时必须定位<br>可移植层：系统调用功能的集合<br>机器相关层：启动初始化、中断例外、IO设备、内存处理器调度、模式切换</p>
+</li>
+<li>Loader流程：<br> 读ELF文件<br> 放置代码（指令序列）、Initialized data、堆、栈<pre><code>栈：编译器布局，局部寻址
+堆：链接器、loader确定起始地址；通过库函数malloc管理；可能随机分配
+全局数据+代码：编译器静态分配产生符号；链接器重定位；加载器完成内存的布局
+</code></pre> 动态链接到共享库<br> 准备好OS核心运行应用</li>
+<li>OS的组成<br>处理器管理：分时复用、同步、公平 - 调度器<br>内存管理：效率公平<br>IO设备管理<br>文件系统：可靠性 效率<br>窗口系统GUI<br>启动<br> 上电、处理器Reset、跳转BIOS初始化、加载bootloader、加载OS</li>
+<li><p>OS的结构<br>一体结构（宏内核）<br> 共享内核地址空间、效率高、不稳定、不灵活<br> Win Linux<br>微内核<br> 操作系统服务作为常规进程，用户通过消息获取服务<br> 灵活、低故障、低效、不方便共享数据<br> MacOS<br>库操作系统<br> App直接通过库与底层硬件交互<br> 效率高 通用性差<br>虚拟机</p>
+</li>
+<li><p>OS状态切换<br>特权态：常规指令、特权指令、访问用户内存、访问核心内存<br>切换方式：<br>系统调用<br> 操作系统API<br> 传参方式：寄存器、堆栈、内存向量（数组）<br> 种类：进程管理、内存管理、文件管理了、设备管理、通信<br> 按功能划分：内核brk粗粒度划分给库；库细粒度malloc管理内存<br>流程：切到内核栈；保存上下文；检查R0；跳到R0地址；结果存到R31；恢复上下文；切换用户栈；iret<br>中断/异常</p>
+<pre><code>中断源：硬件、软件INT
+例外：程序错误、软件生成INT、硬件检测例外
+</code></pre></li>
+<li>科研中的四种能力<br>系统经济学观<br>全局系统观、经济学理念（降低成本）<br>剥茧抽丝<br>全系统栈调试能力<br>抽象建模<br>技术发展史</li>
+<li>经典延时<br>分支预测 5ns<br>L1 1ns<br>互斥锁 25ns<br>主存 0.1us<br>HDD寻道 10ms<br>SSD 10us</li>
+</ol>
+<h4 id="Ch2-进程与线程"><a href="#Ch2-进程与线程" class="headerlink" title="Ch2 进程与线程"></a>Ch2 进程与线程</h4><ol>
+<li>进程Def：一个具有一定独立功能的程序在一个数据集合上的一次动态执行过程</li>
+<li>进程的并行性：虚拟化CPU、IO计算交叠、CPU并行性</li>
+<li>进程的表示：进程控制块PCB<br>PCB是进程在内核中的表示<br>包含：状态、寄存器、内存管理（栈、页表、段）、IO文件管理（通信端口、目录、文件描述符）</li>
+<li>原语：<br>创建和终止exec fork wait kill<br>信号<br>操作 yield<br>同步</li>
+<li>进程的状态切换<br><img src="/images/notes/os_02.png" alt=""><br>创建：系统初始化时、用户请求时<br>退出：正常退出、出错退出、致命错误强制退出、被其他进程杀死</li>
+<li>线程Def 线程是进程的一部分，描述指令流执行状态，是CPU调度的基本单位<br>线程在同一地址空间 可以共享变量<br>原因：进程切换系统开销大，同应用多个活动<br> CPU利用率=1-pn p=IO操作与停留在内存的时间比</li>
+<li>线程切换vs进程切换：<br>线程：TLB共享，不变；Cache不动，硬件自动替换<br>进程：需刷新Cache，保存内存影响（TLB内的内存访问位）</li>
+<li>TCB内容<br>状态、寄存器、EIP、栈、代码、共享所有权限<br>除了地址空间和堆共享</li>
+<li>线程的分类<br>用户线程<br>由一组用户级的线程库函数来完成线程的管理，包括线程的创建、终止、同步和调度等。每个进程有运行时系统和用户态TCB表<br>优点：快捷、高效、自己的调度算法、可扩展<br>缺点：阻塞系统调用难实现、无时钟中断、页面故障问题<br>内核线程<br> 通过系统调用实现的线程机制，由内核完成线程的创建、终止和管理<br> TCB表在内核中<br> 开销大<br>轻量级进程<br>内核支持的用户线程。一个进程可有一个或多个轻量级进程，每个轻权进程由一个单独的内核线程来支持。<br>TCB和PCB约等于<br> 一对一：每一个用户级线程拥有自己的内核栈<pre><code>内存利用率高、系统服务可并行、可多处理器、复杂度高
+</code></pre>多对一：一个进程所有线程共享内核栈</li>
+<li>调度目的<br>公平性（不饥饿）<br>批处理：吞吐量、CPU占用率、周转时间<br>交互式系统：响应时间、均衡性<br>实时系统：满足截止时间、可预测性</li>
+<li>调度器工作流程<br>保存当前进程线程状态<br>选择下一个待运行的进程线程<br>分派</li>
+<li>调度算法<br>先到先服务FCFS<br>优点：简单 缺点：CPU利用低、平均响应时间波动大<br>最短时间优先STCF、最短剩余时间优先（用于抢占）SRTCF<br>优点：平均响应时间短<br>缺点：不公平、饥饿；需要询问时间<br>时间片轮转算法RR<br>FCFS的抢占式 公平<br>大时间片：等待时间长<br>小时间片：响应时间快、大量上下文切换<br>虚拟轮转算法VRR<br>IO密集型进入辅助队列FIFO，辅助队列优先级更高<br>公平<br>多级队列MQ<br>就绪队列分子队列，不同调度算法，不同时间片额度<br>多级反馈队列MLFQ<br>用完时间片则下降优先级，IO密集型保持高优先级<br>彩票调度<br>避免饥饿的SRTCF；公平<br>公平共享调度FSS<br>用户组有优先级<br>公平第一位</li>
+<li>多处理器调度<br>协同调度（多进程、同进程的多线程）<br>专用处理器分配（线程专用CPU，直到处理完成）</li>
+<li>实时调度<br>可调度条件（接纳控制）： Ci计算时间 Ti周期<br>算法：<br>速率单调调度：进程的优先级等于出现频率，越高越好<br>必须周期性进程<br>最早最终时限优先调度EDS<br>需要进程宣布最终时限，不一定周期性进程<br>进程在最终时限来临前会抢占当前进程<br>BSD多队列调度<br>Pi = base + (CPUi – 1) /2 +nice<br>CPUi = (Ui + CPUi – 1) / 2<br>Ui进程第i段时间利用率</li>
+</ol>
+<h4 id="Ch3-同步与通信"><a href="#Ch3-同步与通信" class="headerlink" title="Ch3 同步与通信"></a>Ch3 同步与通信</h4><ol>
+<li>并发进程需要信息同步（共享资源）和数据传输（管道）</li>
+<li>临界区：保证原子操作<br>实现：基于软件、硬件中断、原子操作指令与互斥锁<br><img src="/images/notes/os_03.png" alt=""></li>
+<li>软件方案：<br>特点：复杂（需共享数据）；忙等浪费CPU<br>LockTwo:<br>while (turn ≠ i); //turn表示允许进入临界区的线程<br>CRITICAL<br>turn = j;<br>满足忙等 不满足空闲则入<br>LockOne:<br> Flag[id]表示线程id是否在临界区<br> While (flag[j]);<br>flag[i]=1;<br>CRITICAL<br> Flag[i] = 0;<br> 不满足忙等<br> 解决：先置1后循环检查，满足忙等 不满足空闲则入<br>Peterson算法：<br> Turn 该谁进入临界区；flag[id]线程id是否准备好<br> Falg[id] = 1;<br> Turn = j;<br> While (flag[j] &amp;&amp; turn == j);<br> CRITICAL<br> Flag[i] = false;<br> 空闲则进、有忙等但不饥饿<br>Dekkers算法</li>
+</ol>
+<p>N线程：线程退出时把turn++；线程Ti要等从turn 到i-1的线程都退出临界区后访问临界区</p>
+<ol start="4">
+<li>禁用中断<br>延迟处理外部事件，在acquire和release里禁止上下文切换<br>缺点：只适用单核；进程无法被停止，导致饥饿；临界区太长无法响应硬件</li>
+<li>原子操作指令<br>TAS：取值、存1、返回读数<br>Exchange：交换<br>LL-SC：检测是否被修改过<br>优点：使用N处理器任意进程数同步；简单易证<br>缺点：忙等、饥饿、死锁（拥有临界区的低优先级进程）</li>
+<li>死锁Def：一个进程集合死锁，如果集合中所有进程都在等待一个事件，且等待的事件只能由集合中其它进程触发</li>
+<li>资源分配图<br>进程A持有资源R<br>进程B请求资源S<br>死锁 = 资源分配图里的环</li>
+<li>死锁条件<br>互斥：所有资源恰分配给一个进程<br>占有和等待：持有资源的进程可以请求新资源<br>不可抢占：资源不可被抢走<br>环路等待：进程以环路的形式等待</li>
+<li>死锁的策略<br>忽略问题<br>检测并修复<br>杀死、回滚<br>动态避免<br>银行家算法 Need = Max – Allocation<br>安全状态：未发生死锁+存在让所有进程能完成的调度方案<br>预防<br>避免互斥 假脱机虚拟化<br>避免占有 两阶段加锁（先全部加锁）<br>抢占<br>对资源请求制定顺序id，请求升序提出（或不能请求比当前占有资源id低的资源）最流行</li>
+<li>信号量<br>表示系统资源的剩余量<br>原子操作：P（Down）若非正，添加到等待队列；减一<br>V（Up）加一<br>使用：互斥访问（信号量为1）；条件同步（多线程同步）</li>
+<li>生产者消费者<br>信号量实现：mutex(1), fullBuffer, emptyBuffer<br>存：notFull-&gt;P; mutex-&gt;P; Add(c); mutex-&gt;V; notEmpty-&gt;V<br>管程实现：存：<br>lock-&gt;acquire();<br>while (count==n) notFull.wait();<br>Add c<br>notEmpty.signal();<br>lock-&gt;release();</li>
+<li>管程<br>用于多线程互斥访问共享资源的程序结构<br>Signal之后的选择：Hoare被唤醒的进程立即执行<br>Hanson：退出管程 signal必须是最后一行语句<br>Mesa：继续执行</li>
+<li>条件变量<br>等待：加入等待队列、释放锁、调度、上锁<br>Singal：移出等待队列、唤醒</li>
+<li>屏障Barrier<br>指定屏障变量，广播给其他n-1进程，若变量值达到n则继续<br>在并行计算机上的应用：多播网络、计数逻辑、用户级屏障变量</li>
+<li>哲学家就餐问题<br>信号量实现：<br>信号量初始化为1<br>奇数编号：先拿左叉子再拿右叉子；偶数编号相反；最后放叉子先左后右</li>
+<li>读者-写者问题<br>读写互斥、写写互斥<br>信号量实现：<br>WriteMutex初识为1，表示读写的互斥<br>CountMutex 修改Rcount时的互斥<br><img src="/images/notes/os_04.png" alt=""><br>管城实现 Sync03 P39-40</li>
+<li>进程间通信<br>流程：建立通信链路、Send/Recv交换数据<br>目的主体：pid, file, port<br>途经：<br>消息队列<br>由OS维护，以字节序列为基本单位的间接通信机制<br>每个消息是一个字节序列<br>相同标志的消息构成FIFO<br>共享内存<br>OS把同一个物理内存区域同时映射到多个进程的内存地址空间<br>优点：快速方便<br>缺点：需要额外的同步机制协调数据访问<br>管道<br>进程间基于内存文件的通信机制<br>子进程继承文件描述符<br>信号<br>进程间的软件中断通知和处理机制<br>信号接收处理方式：捕获（执行进程指定的处理函数）、忽略（执行OS的缺省处理）、屏蔽（禁止进程接收处理信号）<br>缺点：传送信息量小；只有一个类型<br>流程：进程向OS注册信号处理函数；OS分发信号到进程的信号处理函数；执行信号处理函数<br>设计考虑：<br> 缓冲<br> 直接通信：只有一方有缓冲<br>间接通信：信箱（允许多对多通信），需要缓冲区、互斥锁、条件变量<br>同步发送：若资源忙则阻塞；启动数据传输后，直到源缓冲用完后再阻塞<br>异步发送：结束时需要应用检查状态，或者向应用发信号<br>异步接收：有消息则返回数据，无消息则返回状态（用接收线程或事件处理）<br>同步最常见，异步可以并发，要精心设计<br>消息丢失：确认/超时检测、乱序（序列号）<br>消息损坏：重发、检验码CRC</li>
+<li>例：键盘输入<br>键盘输入-&gt;中断处理器-&gt;生成mbox消息</li>
+</ol>
+<h4 id="Ch4-虚拟内存"><a href="#Ch4-虚拟内存" class="headerlink" title="Ch4 虚拟内存"></a>Ch4 虚拟内存</h4><ol>
+<li>存储层次<br><img src="/images/notes/os_05.png" alt=""></li>
+<li>需求<br>应用透明（运行在不同的内存大小）<br>扩展内存<br>进程保护<br>多进程共享</li>
+<li>虚拟内存<br>CPU和进程看到虚地址<br>内存和IO设备看到物理地址<br>优点：灵活、简单、高效<br>映射粒度<br>字节映射，映射表大小=程序大小<br>映射实现方式<br>软件：无内存保护<br>MMU<br>OS负责维护MMU：内存管理、进程切换、异常处理</li>
+<li>找空闲片段的方法：首次适配、下次适配（继续）、最优适配（找最小段）、最差适配、快速适配（分段，类似伙伴系统）</li>
+<li>映射方式<br>基址+长度<br>不足：外部碎片、进程难增大、难共享内存<br>分段<br>每个进程有段表(seg, valid, size, base)<br>段错误：valid=0；越界：memory violation<br>段间离散，段内连续<br>不足：外部碎片<br>流程：虚拟地址=Segment||Offset，Segment根据段表找到Base，Base和Offset物理加<br>切换进程：切换段表和指向段表的内核指针<br>分页<br>使用固定大小的内存单元，按需加载<br>每个进程有页表，记录虚页到物理页的映射<br>好处：分配简单、易共享、按页保护<br>不足：页表太大、页表项很多空闲<br><img src="/images/notes/os_06.png" alt=""><br>页表项 – 4B<br>  PFN<br>  P位：在不在内存<br>  R/W  U/S: User or Supervisor<br>  A位：标识是否被访问<br>  D位：是否为脏<br>设页大小4KB，每个进程的页表项大小为4MB<br>段页式<br>先划分为若干段，每个段分页，段表记录页表地址<br>虚拟地址=Vseg||VPage||offset<br>多级页表<br>设分为10||10||12<br>一级页表管1024个二级页表<br>二级页表有1024项，每项映射一个页<br>进程的页表的大小：4B<em>1024+4B</em>1024=8KB<br>反向页表<br>按物理页索引，记录物理页对应的进程ID和虚页<br>地址转换：哈希查找<br>缺点：维护哈希链的开销<br>适用于虚拟内存大、物理内存小</li>
+<li>TLB<br>VP, PP, valid, 访问控制位；pid，RM（用于页替换），Cache<br>流程<br>VA给MMU，MMU查TLB匹配VP<br>若TLB hit，且valid=1取物理页号，若valid=0，等同TLB miss<br>若TLB miss，MMU在页表中进行查找，得到PTE，将PTE加载如TLB<br>  若PTE的valid=0，PageFault缺页，页不在内存，中断读硬盘并更新PTE<pre><code>若有空闲页框PP1，PP=PP1
+若没有，替换PP2
+</code></pre>若脏则写回磁盘<br>Flush<br>PP=PP2读内容，更新PTE，加入TLB<br>设计：需要空闲页框链表<br>纯硬件：不灵活、需更多空间保存页表<br>进程切换：若有pid标签，则修改TLB寄存器和进程寄存器的内容；否则作废整个TLB<br>修改页表项：指修改tag，换出，上下文切换，Exec<br>需修改内存中的PTE和把对应TLB表项设为无效（TLB flush）</li>
+<li>Cache vs. TLB<br>相同：缓存、不命中则替换<br>不同：关联度，一致性（缓存：侦听协议；TLB：无脑flush）</li>
+<li>页替换算法<br>最优算法（MIN）<br>若知道未来的访问情况，则替换最不可能访问的<br>适用于离线分析<br>例：若内存4个页，访问序列123412512345，则6个缺页<br>NRU<br>按顺序随机选择页：非R且非M、非R且M、R且非M、R且M<br>例：上述例子7个缺页<br>缺点：需扫描内存中所有页的RM位<br>FIFO<br>选择最老的页扔掉<br>好处：开销小<br>坏处：频繁适用的页被替换<br>例：上述10个缺页（若内存3个页，只9个缺页）<br>Second Chance<br>检查最老页，R为0，替换；否则，清零并移动到队尾，继续查找<br>好处：简单<br>坏处：最坏情况可能需要很长时间<br>例：8次缺页<br>Clock<br>环形链表，指针检查，R为0替换；否则置0，指针前移<br>好处：开销小，实际的解决方案<br>双表针Clock<br>前表针扫描把R清零，后表针把R为0的页加入替换链表<br>表针间距：页框再次被访问的时间窗口，控制页在内存的最长停留时间<br>扫描速度：是替换速度，空闲内存小，扫描速度快<br>LRU<br>链表，替换LRU的页并置顶为MRU<br>Hit也置顶<br>矩阵表示法：访问页框k时，把k行的位置1，k列的位置0，自己置0；找二进制行数最小的行<br>例：8个缺页<br>好处：对MIN算法的很好近似<br>坏处：实现困难<br>近似LRU<br>记录每页访问时间戳（硬件的指令计数器），替换时间戳最小的页<br>坏处：开销大<br>NFU<br>记录每页的访问次数（软件模拟，时钟中断时所有页计数器与R值相加），替换访问次数最小的页<br>例：8个缺页<br>坏处：过去频繁的页不能被换出<br>Aging<br>时钟中断时，页计数器右移1位，再最高位与R位相加<br>记录的历史更短，无法区分访问的先后顺序<br>好处：对LRU的较好近似<br>工作集<br>定义：最近K次访问的那些页<br>近似：一个进程在过去T秒内使用的页<br>算法：记录页的上次访问时间；替换时扫描所有页，若R=1则置0且更新访问时间；若R=0则计算时间差Δ，若大于T    则替换（脏页面调度返回）。更新缺页的页到工作集。有多个R=0则淘汰生存时间最久的；若全为R=1则随机选不脏的替换<br>缺点：实现困难<br>WSClock<br>表针扫描，若R=1，置0更新时间；若R=0，Δ&gt;T，M位为0，替换</li>
+<li>虚存设计问题<br>页大小<br>大页：页表小，磁盘IO高效；内部碎片<br>解决：内核用大页，用户进程用小页<br>模拟PTE的控制位<br>M位：用R/W模拟<br>  用预留位记录页的ReadOnly状态，把R/W设为ReadOnly<br>  对页写时触发Page fault(Write fault)，如果不是ReadOnly则M设1<br>R位：用V位模拟<br>  用预留位记录页的V位，设V为0<br>访问页时触发page fault，若预留V=1，则置R为1，加入LRU链；若不在内存，进行页替换</li>
+<li>颠簸：频繁发生缺页<br>现象：进程被阻塞，访存速度慢<br>原因：进程工作集&gt;可用物理内存；进程过多<br>解决：不活跃组进程（等待事件或资源）的工作集不放内存，新增长期调度器决定哪些进程是活跃进程</li>
+<li>替换哪个进程的页框<br>全局选择：所有进程的页框选择<br>优点：简单<br>缺点：没有隔离，受其他进程干扰，不能控制各进程使用量<br>局部选择：从本进程选择（工作集或WSClock算法）<br>优点：隔离<br>缺点：不灵活，进程内存可用量固定，增大会颠簸<br>平衡分配：局部选择+页框池大小动态调整<br>进程换入时，先预载初识池大小的部分页减少page fault，如果等于工作集大小会更快<br>初识池大小分配：固定、余量平均（差异大）、进程大小按比例<br>动态调整：PFF算法（缺页率PFR高于A则增加内存，低于B则缩小内存）<br> PFR：上一秒缺页数或滑动均值<br>何时调整：发生缺页时</li>
+<li>钉住页<br>原因：DMA需要被传输的页<br>记录所有被钉住的页</li>
+<li>交换区：存储进程换出页<br>管理方法<br>静态<br>创建进程时分配，结束时回收，大小等于进程image<br>一个虚存页对应一个磁盘页shadow page<br>初始化：按需换入或按需换出<br>缺点：不灵活、难增长<br>动态<br>页换出时分配，换入时回收，虚页与磁盘页不绑定<br>PTE中记录页的磁盘地址<br>优化：把程序段用ELF文件代替<br>换出：页拷贝，磁盘页号DP填入PTE，把PTE和TLB置无效<br>换入：找空闲页框并拷贝，PP填入PTE，把PTE和TLB置有效</li>
+<li>页清零：第一次page fault时</li>
+<li>页共享</li>
+<li>写时复制<br>适用于fork<br>把所有页设为ReadOnly，在子进程写时创建新页</li>
+<li>UNIX地址空间<br>数据段：初始化数据、未初始化数据BSS(Block Started By Symbol)，用brk更改<br>栈段<br>内存映射文件：mmap把文件映射入内存</li>
+<li>LINUX内存管理<br>伙伴系统<br>缺点：内部碎片</li>
+</ol>
+<h4 id="Ch5-IO设备"><a href="#Ch5-IO设备" class="headerlink" title="Ch5 IO设备"></a>Ch5 IO设备</h4><ol>
+<li>IO硬件包括：IO总线、设备控制器、IO设备<br>设备控制器<br>主机接口（信息传递）、控制寄存器、数据缓冲区</li>
+<li>IO寻址方式<br>IO端口：只能IO指令访问、独立地址空间（地址线指示）<br>内存映射IO：统一地址空间（CPU发出地址，所有内存模块和所有设备都要解析）<br>优点：编程方便、保护灵活、指令少<br>问题：cache不能缓存、专用内存总线（IO设备不能查看内存地址）</li>
+<li>传输数据的粒度<br>字符设备，传输大小可变<br>块设备，固定块为单位</li>
+<li>IO软件层次<br>用户级IO软件<br>与设备无关的OS软件：分配设备与空间、缓冲、错误报告<br>设备驱动程序<br>中断处理程序</li>
+<li>传输数据的方法<br>PIO轮询<br>中断<br>DMA<br>适用于：中断缓慢、字符很多<br>同步操作<br>  OS检查正确性，调用驱动<br>  驱动分配buffer，启动DMA（等待设备就绪，清除就绪，设置DMA参数），阻塞当前进程<br>  DMA传输完成，发中断，唤醒线程<br>  驱动检查结果正确性<br>  系统调用拷贝数据，返回用户进程<br>异步操作<br>OS检查正确性、挂到异步请求队列、返回<br>内核的异步线程取队首调用驱动<br>驱动启动DMA，阻塞异步IO线程<br>DMA传输完成，发中断，唤醒异步IO线程<br>驱动检查结果正确性<br>异步IO线程拷贝数据<br>字模式：周期窃取；块模式：突发模式 本质：CPU和DMA不能同时占总线</li>
+<li>设备驱动<br>给OS的其他模块提供操作设备的API，与设备控制器交互<br>接口<br>Init初始化硬件<br>Open初始化驱动，分配资源<br>Close 回收资源并关闭设备<br>Read、write、块设备还有seek（控制器控制磁头移动，对驱动透明）<br>流程<br>准备工作<br>操纵设备、阻塞等待<br>错误处理<br>返回调用者</li>
+<li>安装驱动方式<br>静态（重启OS）<br>动态挂载<br>间接指针（设备入口点表）<br>驱动加载进内核空间<br>关联入口点<br>初始化设备驱动<br>优点：灵活性<br>缺点：安全性，设备驱动在内核态</li>
+<li>磁盘<br>扇区<br>头部（ID）数据区：512B 尾部（ECC校验码）<br>磁盘缓存<br>针对随机读写<br>由控制器管理，替换策略：LRU<br>调度算法<br>FCFS<br>寻道距离可能长<br>SSF<br>选择磁头移动距离最短的请求<br>坏处：饥饿<br>SCAN电梯调度<br>磁头单方向移动，再折回<br>LOOK：如果之后没请求，直接折回<br>消除饥饿<br>C-SCAN<br>折回时不服务<br>服务时间趋于一致</li>
+<li>RAID<br>RAID0<br>可靠性等于相乘<br>带宽N倍<br>延迟为单个延迟<br>RAID01<br>容量=N倍/R<br>可靠性：最多容忍N/2块盘坏<br>写带宽：N/2倍 读带宽：N倍<br>读延迟：单个延迟 写延迟：略大于单个<br>RAID2    位为粒度+ECC海明码 6b奇偶校验<br>RAID3    位为粒度+Parity位 1b<br>缺点：需要硬盘同步<br>RAID4<br>缺点：校验盘易坏<br>写校验盘方法：读校验盘+新盘Pnew=Bold XOR Bnew XOR Pold<br>读延迟：单个延迟 写延迟：约两个盘<br>读带宽：N-1倍 写带宽：单个带宽/2<br>RAID5<br>校验块分散不同盘<br>写带宽：校验块并行写=N/4倍</li>
+<li>卷管理<br>虚拟块设备<br>RAID将逻辑卷的块地址映射到物理设备</li>
+<li>存储系统的演进<br>企业：分布式系统</li>
+<li>闪存<br>全电子器件，无机械部件，非易失<br>NAND（大容量持久化存储）<br>NOR（更快，替代ROM）<br>层次结构：Flash-&gt;Die-&gt;Bank-&gt;块（MB，读写粒度）-&gt;页<br>页<br> 数据区+OOB（ECC、状态信息）<br> 大小：4KB-16KB<br>操作接口<br>状态：invalid，erased，valid<br>Read：粒度为页，延迟低（几十us），延迟与位置无关<br>Erase：整个块全置1，慢（ms），状态变为Erased<br>Write：擦除后才能写，粒度为页，比读慢（几百us），状态变为Valid<br>可靠性：磨损、干扰（读写一页，相邻页中部分位翻转）<br>FTL方式<br>直接映射<br> 读很快，写很差（读块、擦除块、写块）<br>页级映射<br> 写到新位置上，建立映射表（暂存内存，保存在OOB区）<br> 优点：性能好，可靠性<br> 缺点：内存开销大；重写不覆盖无效原页（垃圾页）<br>块级映射<br> Chunk等于物理块大小<br> 逻辑页地址=chunk号+偏移，chunk映射到块base<br> 缺点：写粒度小于块，需拷贝活页，写放大<br>混合映射<br> 分数据块、日志块<br> 写块被记录进日志块，适当时合并为数据块，原数据块擦除<br> 数据块用块级映射<br> 日志块用页级映射<br> 读块时先查日志映射表，再查数据映射表<br> 回收日志块：若日志块顺序与原数据块不一样，则需一起拷贝到新块上<br> 优点：开销低，数据拷贝少<br>垃圾回收<br>选择含垃圾页的块，拷贝活页，擦除块<br>活页：若映射表PPN=该页<br>缺点：时间长<br>磨损均衡<br>动态：每次写时，选择擦除次数最少的块<br>静态：长时间不再修改的冷快，FTL定期重写</li>
+</ol>
+<h4 id="Ch6-文件系统"><a href="#Ch6-文件系统" class="headerlink" title="Ch6 文件系统"></a>Ch6 文件系统</h4><ol>
+<li>概念<br>文件：命名的字节数组，内容无结构<br>类型：常规文件、目录文件、设备文件、可执行文件<br>属性：大小、所有者、时间戳、权限<br>目录：特殊的文件，文件组织的单位<br>目录项为文件名到ino的映射表<br>I_mode区分<br>文件描述符表<br>打开文件位置、访问方式<br>名字空间：属性层次结构，文件系统的逻辑视图</li>
+<li>接口<br>文件：Create, unlink删除, open, close, read, write, lseek, truncate, stat属性<br>Open流程：路径名解析得到ino，得到inode，拷贝至内存，创建打开文件描述符fd，PCB分配空闲指针指向fd，返回fd<br>目录：mkdir, rmdir, open, close, readdir, link, symlink, rename<br>FS：mkfs, rmfs, mount, umount, sync同步, df获取属性<br>Mount条件：FS类型已知，目录已创建<br>流程：查VFS开关表找到并调用初始化函数</li>
+<li>文件访问模式<br>顺序访问（依次访问每个文件块，和顺序访问扇区不一样）、随机访问、按关键字访问</li>
+<li>硬链接<br>多用户共享同文件，可有多名字，指向同一inode<br>不能对目录做链接</li>
+<li>符号链接<br>Shortcut</li>
+<li>磁盘布局<br>Bootblock<br>Superblock：定义FS<br>块大小数量使用情况、inode大小数量使用情况<br>根目录ino<br>Inode表起始位置，空闲数据块指针，空闲inode指针<br>BlockBitmap<br>InodeBitmap<br>InodeArray<br>DataBlock</li>
+<li>虚拟文件系统VFS<br>规定API，挂载多类型FS</li>
+<li>Inode<br>Ino<br>I_mode<br>Size<br>Nlinks硬链接数<br>Uid，gid<br>Ctime，atime，mtime</li>
+<li>文件块索引<br>连续分配：实现简单、顺序访问性能好；不灵活、外部碎片<br>链表结构：块粒度、随机访问性能差、可靠性差<br>文件分配表（类似链表）：简单；FAT空间消耗、随机访问性能差<br>单级索引：文件可变大、随机访问性能高（数据块直接定位）；不灵活<br>两级索引：支持文件10GB；不灵活、外部碎片<br>UNIX：10直接，1一级间接，1二级间接，1三级间接<br>优点：小文件访问方便、支持文件大<br>缺点：文件有上限、大量寻道<br>Extents：<starting block,="" length=""><br>不定长的连续分配<br>inode记录B树的根节点地址</starting></li>
+<li>名字空间管理<br>文件名与inode分离存储，文件名保存在目录项中<br>创建文件/目录：<br>父目录路径解析、权限检查、检查文件是否存在、创建文件（空闲inode、添加目录项、更新父目录inode）<br>删除文件/目录：<br>父目录路径解析、权限检查、检查文件是否存在、删除（nlink–，若为0则删除，删除目录项，更新父目录inode）</li>
+<li>目录项的组织方式<br>线性表<br>优点：空间利用率高<br>缺点：大目录性能差、删除紧缩耗时<br>B树，以文件名排序<br>优点：大目录性能高<br>缺点：小目录不高效、空间占用大、实现复杂<br>哈希<br>Hash(filename)-&gt;ino<br>优点：查找快<br>缺点：大目录效率不如B树、空间占用</li>
+<li>FS vs. VM<br>相似：用户透明；固定粒度；保护<br>FS更容易：可以慢、可以顺序访问<br>FS更难：每层解析都要IO、文件长度差距大、可靠性<br>FFS BSD<br>分大文件块和子块（512B）<br>大文件：直接指针和inode放在同CG，间址块和指向的块放在同CG<br>用位图取代空闲块链表，连续分配：大粒度访问<br>把磁盘划分为柱面组CG，多个subFS，目录均衡放置<br>优化空间：extents、异步写、日志<br>效果：提高IO带宽、减少长距离寻道<br>创建新文件：修改inode bitmap，写inode，修改父目录项，更新父目录inode，修改bb，写文件块</li>
+<li>文件缓存<br>位于内核空间，多用户共享<br>替换策略：全局LRU<br>预取：访问第i块预取后k块；读取目录项时预取inode；预取同一目录下的所有小文件</li>
+<li>可靠性<br>威胁：设备坏、掉电<br>物理备份：设备级<br>逻辑备份：FS级 全备份、增量备份<br>先写元数据，后写数据<br>获得inode，写bitmap（不能掉电），更新inode（不能掉电），写数据块<br>若在写完元数据之后，且写数据之前宕机，元数据所指向的数据块内容不正确<br>先写数据，后写元数据<br>获得inode，修改bitmap（不能掉电），写数据块，更新inode<br>若写数据后，写inode前宕机，则元数据指向旧版本，保持修改前的状态<br>自底向上<br>文件的数据，文件的inode，父目录的数据，父目录inode，…<br>缺点：写性能差，FS不一致：宕机产生垃圾块<br>解决：fsck检查FS一致性、superblock、bb、inode、nlink域、数据块冲突、数据块越界<br>恢复磁盘布局component<br>启动块：复制启动块到U盘<br>超级块：多副本<br>空闲块结构：重新扫描</li>
+<li>事务<br>A原子性<br>C一致性（事务完成后所有状态必须是正确）<br>I隔离性<br>D持久性</li>
+<li>Write-Ahead Log<br>备份顺序：开始事务TxB、commit结束事务TxE、Checkpoint修改磁盘、清除日志<br>开销：两倍写<br>优化：只记录inode修改的日志，只需一倍写<br>缺点：频繁写磁盘 改进：批量提交（可能损坏数据，不损坏FS）<br>无法应对硬件故障<br>空间 改进：定期checkpoint<br>宕机恢复：若磁盘上没有结束日志TxE，则无行动；否则按日志重做，然后清除日志<br>Checkpoint：commit后把修改全部写到磁盘上<br>Checkpoint完成后清除日志<br>使用前提：日志中所有修改是幂等的；事务唯一编号TID；能确认写磁盘完成</li>
+<li><p>日志文件系统 – Logging File System<br>优点：写日志是顺序访问，可以提高性能<br>方式<br>数据日志<br>写流程：TxB、inode日志、bitmap日志、数据块日志、TxE<br>在Checkpoint时真正修改<br>开销：所有数据块写两次磁盘<br>元数据日志<br>写流程：写数据块、写inode和bitmap日志<br>创建文件：修改inode bitmap，写inode，写父目录的第一块（日志），更新父目录inode<br>写流程：写日志到新位置</p>
+</li>
+<li><p>LFS – Log-Structured File System<br>无需bitmap管理空间，文件块用多级索引<br>Segment：大粒度的内存buffer，可缓存多次写<br>Imap：记录ino-&gt;inode地址<br>一致性：先写文件块，再写inode（无固定位置）<br>消除对磁盘的小粒度随机写和同步写，用大粒度顺序写磁盘<br>重写和修改产生垃圾，垃圾回收<br>写流程：写入一块日志，包含文件块，inode和imap</p>
+</li>
+<li><p>分布式文件系统<br>如何访问远程文件：FTP、DFS<br>NFS<br>多客户端：实现FS功能和接口，系统调用转换为请求服务器<br>单服务器：接收请求，读写本地FS<br>核心：无状态服务器（不记录C打开的文件）<br>File Hangle标识客户端要访问的文件<br>服务器目录可挂载到Client，提供服务器和路径名，返回FileHandle<br>操作：Lookup（返回文件的FH）Read、Write、GetAttr<br>客户端Open时关联fd和FH，close时无交互<br>失效处理：Retry<br>客户端缓存：一致性：open时检查缓存块有效期，脏数据及时写回<br>服务器缓存：可能宕机，要及时WRITE+COMMIT<br>WAFL<br>存数据 4KB块<br>&lt;=64B 直接存inode<br>&lt;=64KB 存16个直接指针<br>&lt;=64MB 存16个一级间接指针<br>其余 存16个二级间接指针<br>快照 - 文件系统的只读版本<br>元数据块写在文件中<br>可COW创建快照，写时复制<br>恢复：到最后一个一致点，用日志恢复到宕机前<br>改进：日志写入NVM，满后写回磁盘<br>创建快照的步骤：把脏块标记为in-snapshot不能修改；分配空间；写回inode；更新block map file；刷回脏块；复制根inode<br>删除快照：删除根inode；清除blockmapfile的位<br>Google File System<br>客户端：库函数接口（用户态，区分GFS和本地FS）<br>多Chunk Service存储GFS，固定粒度64MB<br>每个Chunk存储多个副本，自动复制，自动容错<br>单一Master存储元数据和命名空间，全放内存<br>副本一致性：三阶段写（获得服务器位置、传输数据、S写入文件）</p>
+</li>
+<li>安全与保护<br>数据机密性、完整性、可用性<br>保护机制<br>Authentication<br> 验明身份<br>Authorization 决定A是否允许做某事<br> ACL 访问控制表</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+	
+	
+      <div>
+        <div>
+	
+		<div style="text-align: center; color: #000; font-size: 14px;">---以上---</div>
+    
+</div>
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/05/ai-notes/" rel="next" title="人工智能基础-期末复习笔记">
+                <i class="fa fa-chevron-left"></i> 人工智能基础-期末复习笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/09/matlab-tutorial/" rel="prev" title="Matlab快速入门（一）">
+                Matlab快速入门（一） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNzg1OC8xNDM4OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Yiwei Li" />
+            
+              <p class="site-author-name" itemprop="name">Yiwei Li</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="http://github.com/leepoly/" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                我的儿子们
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ppnuts.com/" title="帅气的lph" target="_blank">帅气的lph</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lgd.gd/" title="帅气的lgd" target="_blank">帅气的lgd</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Notes"><span class="nav-number">1.</span> <span class="nav-text">Notes:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Ch1-绪论"><span class="nav-number">2.</span> <span class="nav-text">Ch1 绪论</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Ch2-进程与线程"><span class="nav-number">3.</span> <span class="nav-text">Ch2 进程与线程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Ch3-同步与通信"><span class="nav-number">4.</span> <span class="nav-text">Ch3 同步与通信</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Ch4-虚拟内存"><span class="nav-number">5.</span> <span class="nav-text">Ch4 虚拟内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Ch5-IO设备"><span class="nav-number">6.</span> <span class="nav-text">Ch5 IO设备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Ch6-文件系统"><span class="nav-number">7.</span> <span class="nav-text">Ch6 文件系统</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yiwei Li</span>
+
+  
+</div>
+
+
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/icons/safari-pinned-tab.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="tech," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="As we know, Raspberry Pi is getting even more popular with its cheap cost and highly customized functions. Now the most powerful Raspberry Pi 4B model has 4GB memory and quad-A72 cores. This is even b">
+<meta name="keywords" content="tech">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何将你的树莓派变成强大的云办公设备 How to make your Raspberry Pi a powerful edge device to WFH">
+<meta property="og:url" content="http://yoursite.com/2020/10/12/play-around-with-raspberry/index.html">
+<meta property="og:site_name" content="Lyw">
+<meta property="og:description" content="As we know, Raspberry Pi is getting even more popular with its cheap cost and highly customized functions. Now the most powerful Raspberry Pi 4B model has 4GB memory and quad-A72 cores. This is even b">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-10-12T14:31:09.956Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何将你的树莓派变成强大的云办公设备 How to make your Raspberry Pi a powerful edge device to WFH">
+<meta name="twitter:description" content="As we know, Raspberry Pi is getting even more popular with its cheap cost and highly customized functions. Now the most powerful Raspberry Pi 4B model has 4GB memory and quad-A72 cores. This is even b">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/10/12/play-around-with-raspberry/"/>
+
+
+
+
+
+  <title>如何将你的树莓派变成强大的云办公设备 How to make your Raspberry Pi a powerful edge device to WFH | Lyw</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Lyw</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-game">
+          <a href="/game/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br />
+            
+            game
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/12/play-around-with-raspberry/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiwei Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lyw">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">如何将你的树莓派变成强大的云办公设备 How to make your Raspberry Pi a powerful edge device to WFH</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-10-12T21:14:00+08:00">
+                2020-10-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>As we know, Raspberry Pi is getting even more popular with its cheap cost and highly customized functions. Now the most powerful Raspberry Pi 4B model has 4GB memory and quad-A72 cores. This is even better than my first smartphone in 2015. As the coronavirus has deeply reformed our daily lives, it is time to buy a raspberry pi, to work from home. I have spent some time finding useful tools and writing scripts to help me study in the dorm conveniently and elegantly.</p>
+<h3 id="Reasons-Why-Raspberry-4B"><a href="#Reasons-Why-Raspberry-4B" class="headerlink" title="Reasons Why Raspberry 4B"></a>Reasons Why Raspberry 4B</h3><ul>
+<li>Its hardware is rather outstanding.</li>
+<li>It supports two 4K monitors.</li>
+<li>As Apple turns to using arm on their macbook, there will be much more available softwares in this ecosystem.</li>
+</ul>
+<h3 id="Before-Booting"><a href="#Before-Booting" class="headerlink" title="Before Booting"></a>Before Booting</h3><a id="more"></a>
+<p>You should prepare the boot image and image burning tool, and a SD card. Now the raspberry has officially published two OS (called raspberry Pi OS), for 32 bit and 64 bit respectively. I recommend using the latest 64bit. Although it is a beta version, it should have higher performance (see evaluation here: <a href="https://medium.com/@matteocroce/why-you-should-run-a-64-bit-os-on-your-raspberry-pi4-bd5290d48947)" target="_blank" rel="noopener">https://medium.com/@matteocroce/why-you-should-run-a-64-bit-os-on-your-raspberry-pi4-bd5290d48947)</a>. Also the ARM ISA it uses has a nice backward compatibility, i.e., we can simultaneously install and execute 32bit and 64bit under the aarch64 ISA.</p>
+<blockquote>
+<p>Raspberry Pi OS 64bit introduction: <a href="https://www.raspberrypi.org/forums/viewtopic.php?t=275370" target="_blank" rel="noopener">https://www.raspberrypi.org/forums/viewtopic.php?t=275370</a><br>Latest download link: <a href="https://downloads.raspberrypi.org/raspios_arm64/images/" target="_blank" rel="noopener">https://downloads.raspberrypi.org/raspios_arm64/images/</a><br>Installation guide: <a href="https://qengineering.eu/install-raspberry-64-os.html" target="_blank" rel="noopener">https://qengineering.eu/install-raspberry-64-os.html</a><br>Use the official tool to burn the image to your SD card: <a href="https://www.raspberrypi.org/downloads/" target="_blank" rel="noopener">https://www.raspberrypi.org/downloads/</a></p>
+</blockquote>
+<h3 id="Remote-Control"><a href="#Remote-Control" class="headerlink" title="Remote Control"></a>Remote Control</h3><p>The most critical function should be connecting to a remote laptop. So I do not have to carry it between my dormitory and working place. There are many candidate softwares here but I choose VNC as my option, since VNC has a specialized arm build for raspberry. The GUI is friendly. And it is free for personal use.</p>
+<p>First of all, download a VNC Server on your laptop: <a href="https://www.realvnc.com/en/connect/download/vnc/" target="_blank" rel="noopener">https://www.realvnc.com/en/connect/download/vnc/</a></p>
+<p>And download the client (called VNCViewer) on your raspberry: <a href="https://www.realvnc.com/en/connect/download/viewer/" target="_blank" rel="noopener">https://www.realvnc.com/en/connect/download/viewer/</a>. You can also check other interesting builds like Chrome and iOS apps. But I have not tried them yet.</p>
+<p>Set an account and password. And now you should connect with your laptop or any other devices.</p>
+<h3 id="Proxy"><a href="#Proxy" class="headerlink" title="Proxy"></a>Proxy</h3><p>Although the raspberry OS has chromium as its default web browser, we can not directly synchronize my personal preferences (favorites, extensions, passwords and form autofills, etc) due to the-reason-we-know. I choose electron-ssr to bypass the GFW and synchronize my remote google accounts, because it has a beautiful GUI and supports subscription links. Unfortunately the original source repo does not provide an arm build. So what? we can build it from source. First do <code>apt update</code> and <code>apt install npm</code>. Then in the source repo, <code>npm install</code> and <code>npm build</code>. The author does not provide a correct package description. We need to manually modify it at the middle of installation. I have successfully built one.</p>
+<blockquote>
+<p>Electron-ssr back-up repo: <a href="https://github.com/qingshuisiyuan/electron-ssr-backup/" target="_blank" rel="noopener">https://github.com/qingshuisiyuan/electron-ssr-backup/</a></p>
+</blockquote>
+<p>Another approach is to use the existing proxy on your remote laptop. After knowing the network topology from your laptop at the working place to your raspberry in your dorm, it is possible you set the <code>http_proxy</code> environment on your raspberry and the traffic would route to your laptop. I am currently trying this method.</p>
+<h3 id="Programming"><a href="#Programming" class="headerlink" title="Programming"></a>Programming</h3><p>It is exciting news that VSCode just published the 1.50 version, along with official arm/arm64 build. Now we do not need VSCode-OSS (a third-party built software, based on the public VSCode source repo) anymore. With the remote extensions, we can elegantly connect to a server and write our code in the dormitory.</p>
+<blockquote>
+<p>VSCode arm64 download page: <a href="https://code.visualstudio.com/docs/?dv=linuxarm64_deb" target="_blank" rel="noopener">https://code.visualstudio.com/docs/?dv=linuxarm64_deb</a></p>
+</blockquote>
+<h3 id="Sharing-Files"><a href="#Sharing-Files" class="headerlink" title="Sharing Files"></a>Sharing Files</h3><h4 id="Files-on-the-Server"><a href="#Files-on-the-Server" class="headerlink" title="Files on the Server"></a>Files on the Server</h4><p>I need to read papers everyday. It is possible that we can download papers in my dorm and update any comments and modifications to another place without launching the cumbersome VNC server. I recommend to use <code>sshfs</code>, which is a filesystem implemented in user mode. It is slower than regular NFS but it does not require a sudo privilege to setup in the server.</p>
+<p>on your client (i.e., your raspberry), do <code>sudo apt install sshfs</code> and <code>sshfs &lt;remote-path&gt; &lt;local-mount-point&gt; -o &lt;ssh-options&gt;</code>, e.g., <code>sshfs congou-1:/scorpio/xxx/ ~/serverfile</code>. Strangely <code>umount</code> needs sudo privileges. But it is fine since we do those completely on the client side. Now you can retrieve those files and install a PDF viewer program (e.g., the popular okular) to view those papers.</p>
+<h4 id="Files-on-Your-Laptop"><a href="#Files-on-Your-Laptop" class="headerlink" title="Files on Your Laptop"></a>Files on Your Laptop</h4><p>My files are synchronized by iCloud and Google Cloud simultaneously. Luckily we can install the iCloud client for linux: <code>sudo apt install snapd</code> and <code>sudo snap install icloud-for-linux</code>. But on my raspberry, the GUI would not start. I will update the part after I can use it.</p>
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>With the powerful hardware and rapidly growing software supports, raspberry pi should be of more general use. Recently RIOS is announcing another similar hardware based on RISCV. If arm is not open anymore, who is our next choice?</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+	
+	
+      <div>
+        <div>
+	
+		<div style="text-align: center; color: #000; font-size: 14px;">---以上---</div>
+    
+</div>
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tech/" rel="tag"># tech</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/25/Build-zsim-nvmain/" rel="next" title="Build zsim-nvmain">
+                <i class="fa fa-chevron-left"></i> Build zsim-nvmain
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/01/02/owning-music-rights-all-by-yourself/" rel="prev" title="打破国内音乐的版权藩篱 Owning rights to music playing all by yourself">
+                打破国内音乐的版权藩篱 Owning rights to music playing all by yourself <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNzg1OC8xNDM4OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Yiwei Li" />
+            
+              <p class="site-author-name" itemprop="name">Yiwei Li</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="http://github.com/leepoly/" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                我的儿子们
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ppnuts.com/" title="帅气的lph" target="_blank">帅气的lph</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lgd.gd/" title="帅气的lgd" target="_blank">帅气的lgd</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Reasons-Why-Raspberry-4B"><span class="nav-number">1.</span> <span class="nav-text">Reasons Why Raspberry 4B</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Before-Booting"><span class="nav-number">2.</span> <span class="nav-text">Before Booting</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Remote-Control"><span class="nav-number">3.</span> <span class="nav-text">Remote Control</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Proxy"><span class="nav-number">4.</span> <span class="nav-text">Proxy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Programming"><span class="nav-number">5.</span> <span class="nav-text">Programming</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sharing-Files"><span class="nav-number">6.</span> <span class="nav-text">Sharing Files</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Files-on-the-Server"><span class="nav-number">6.1.</span> <span class="nav-text">Files on the Server</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Files-on-Your-Laptop"><span class="nav-number">6.2.</span> <span class="nav-text">Files on Your Laptop</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Conclusion"><span class="nav-number">7.</span> <span class="nav-text">Conclusion</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yiwei Li</span>
+
+  
+</div>
+
+
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
