@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/icons/safari-pinned-tab.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="Hexo, Lyw" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="SSH Port forwarding is a technique used to tunnel your network traffic from the local (remote) network to the remote (local) network. Although it has several limitations, SSH port forwarding is powerf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSH Port Forwarding 简介 (SSH Port Forwarding is All You Need)">
+<meta property="og:url" content="http://yoursite.com/2021/06/27/port-forwarding-usage/index.html">
+<meta property="og:site_name" content="Lyw">
+<meta property="og:description" content="SSH Port forwarding is a technique used to tunnel your network traffic from the local (remote) network to the remote (local) network. Although it has several limitations, SSH port forwarding is powerf">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-07-02T14:01:24.401Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SSH Port Forwarding 简介 (SSH Port Forwarding is All You Need)">
+<meta name="twitter:description" content="SSH Port forwarding is a technique used to tunnel your network traffic from the local (remote) network to the remote (local) network. Although it has several limitations, SSH port forwarding is powerf">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/06/27/port-forwarding-usage/"/>
+
+
+
+
+
+  <title>SSH Port Forwarding 简介 (SSH Port Forwarding is All You Need) | Lyw</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Lyw</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-game">
+          <a href="/game/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br />
+            
+            game
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/06/27/port-forwarding-usage/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiwei Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lyw">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SSH Port Forwarding 简介 (SSH Port Forwarding is All You Need)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-06-27T14:52:34+08:00">
+                2021-06-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>SSH Port forwarding is a technique used to tunnel your network traffic from the local (remote) network to the remote (local) network. Although it has several limitations, SSH port forwarding is powerful, flexible and sufficient to facilitate your server/client workflow. In this blog I briefly introduce this technique and several scenarios I have used.</p>
+<a id="more"></a>
+<h3 id="Why-and-Why-Not-Port-Forwarding"><a href="#Why-and-Why-Not-Port-Forwarding" class="headerlink" title="Why and Why Not Port Forwarding"></a>Why and Why Not Port Forwarding</h3><p>Overall, port forwarding is powerful, flexible and sufficient:</p>
+<ul>
+<li>It is easy to manage. You can list all your established ports by linux command <code>netstat -plnt</code>. This tool also exists on Windows.</li>
+<li>It does not require sudo privileges.</li>
+<li>It can be applied to all users on the same node (or same network, to be accurate).</li>
+<li>It provides a chain-based model for connection. Another proxy can be applied onto an existing tunnel.</li>
+<li>The transmitted data is end-to-end encrypted (E2EE) by default.</li>
+</ul>
+<p>There are also some inherent limitations:</p>
+<ul>
+<li>It resides on the L3 network. It only takes effect on TCP packets. E.g., <code>ping</code> uses ICMP that is unaffected and <code>ssh</code> itself should be proxied by <a href="https://stackoverflow.com/questions/19161960/connect-with-ssh-through-a-proxy" target="_blank" rel="noopener">another way</a>. Note that it is possible to use ssh for L2 tunneling, but it requires sudo privileges thus beyond the scope of this post.</li>
+<li>It cannot automatically direct all TCP traffic. I.e., if a specific application does not support proxy itself, there is nothing else we can do. However, this should rarely happen because almost all modern apps have a dedicated proxy setting.</li>
+</ul>
+<h3 id="Local-Port-Forwarding"><a href="#Local-Port-Forwarding" class="headerlink" title="Local Port Forwarding"></a>Local Port Forwarding</h3><p>Suppose on the server you can access an address (IP with port) <code>rAddr:rPort</code>. And on the client you can only access the server via SSH <code>sAddr:sPort</code> (<code>sPort</code> is usually 22). With local port forwarding, it is possible to bind the remote address to your local network (e.g., localhost), and forward network traffic. The basic ssh argument is <code>ssh -L (lAddr:)lPort:rAddr:rPort sAddr -p sPort</code>, where <code>lAddr</code> and <code>lPort</code> are the addresses on the local network. Generally we bind at our own host, i.e., <code>localhost</code>, so <code>lAddr</code> is omitted. Once the local address is set, all nodes within the local network, including our own host, can access the remote address by accessing <code>lAddr:lPort</code>. SSH does the rest of the tunneling work for us.</p>
+<h4 id="Use-Case-1-Use-jupyter-notebook-remotely-on-the-client"><a href="#Use-Case-1-Use-jupyter-notebook-remotely-on-the-client" class="headerlink" title="Use Case #1: Use jupyter notebook remotely on the client"></a>Use Case #1: Use jupyter notebook remotely on the client</h4><p>Jupyter notebook is designed to follow the client/server model, which means we can access it from our laptop, but offload any computation to the server. Also our intermediate result keeps on the server as long as the server is on. To enable this, we can start a jupyter notebook on the server, and access it on a local browser if the server has a public IP.</p>
+<p>However, when the server is behind a NAT or within a VPN, tunneling is in need. Assume the server has a internal IP <code>192.168.1.181</code>, and there is a jump host with a public IP <code>101.6.123.123</code>. Make sure you can access notebook from the jump host (say with the address <code>192.168.1.181:12116</code>). Now forward the connection by first executing <code>ssh -L 12116:192.168.1.181:12116 101.6.123.123 -N -f</code>. And on your local web browser access <code>http://localhost:12116</code>.</p>
+<h4 id="Use-Case-2-Forward-remote-desktop-on-the-client"><a href="#Use-Case-2-Forward-remote-desktop-on-the-client" class="headerlink" title="Use Case #2: Forward remote desktop on the client"></a>Use Case #2: Forward remote desktop on the client</h4><p>If the client and the server are in the same network, both CLI (Command Line Interface) and GUI (Graphical User Interface) access is convenient, e.g., via <code>ssh</code> and <code>rdp</code>, if the target server has installed ssh and xrdp server respectively. However, if the client is not in the network. How can we access the server?</p>
+<p>One approach is with the help of a jump host with a public IP address (The same with Use Case #1). In my working environment, the campus networking is extremely confusing. For example, our subgroup resides within a controllable router starting with <code>192.168.50.x</code>. This network connects to the entire company network, starting with <code>10.88.xx.xx</code>, which is then managed and connected to the big campus network. When I am at the dorm, to access ssh at the subgroup, I “jump” multiple times: first to our controllable router, then the target server. The router does not get a static IP, but luckily <a href="https://en.wikipedia.org/wiki/Dynamic_DNS" target="_blank" rel="noopener">DDNS technique</a> allows us to access it via a fixed domain (and only secure since it maps to an internal IP). This shows the strength of the chain-based model.</p>
+<p>To use the GUI on that server, I add a port forwarding entry on our router (from <code>0.0.0.0:13389</code> to <code>192.168.50.x:3389</code>). Then connect via <code>10.88.xx.xx:13389</code>. Here comes the ssh forwarding part: even if we are not on campus, we can connect that server with a jump host, by a similar method in Case #1 to forward 13389 port to our localhost.</p>
+<p>Another way is to “create a mapping” from a public IP address to the internal server address. Introspectable tunneling (for example, <a href="https://ngrok.com/" target="_blank" rel="noopener">ngrok</a>) is what you find.</p>
+<h3 id="Remote-Port-Forwarding"><a href="#Remote-Port-Forwarding" class="headerlink" title="Remote Port Forwarding"></a>Remote Port Forwarding</h3><p>Remote port forwarding takes the reverse path: it allows the server to access your local network. Suppose on the client you can access <code>lAddr:lPort</code>, and the server address is still <code>sAddr:sPort</code>. With the <em>remote port forwarding</em>, the server can access the local address with a dedicated address <code>rAddr:rPort</code>, where <code>rAddr</code> is usually the server itself, i.e., <code>localhost</code>.</p>
+<h4 id="Use-Case-3-Use-local-ssr-to-access-github-on-the-server"><a href="#Use-Case-3-Use-local-ssr-to-access-github-on-the-server" class="headerlink" title="Use Case #3: Use local ssr to access github on the server"></a>Use Case #3: Use local ssr to access github on the server</h4><p>On my laptop I have my way to accelerate access to github via a http proxy, for example: <code>localhost:1080</code>. But when we need to directly push repos on our server, it is not that quick. It is easy to solve by remote forwarding, which allows the server to access the target address (<code>lAddr:lPort</code>) via your own laptop’s port. The new port is created to <code>rAddr:rPort</code>.</p>
+<p>Assume the local ssr port is 1080. Start a remote port forwarding with this line:</p>
+<p><code>ssh -R 10800:127.0.0.1:1080 myserver -N -f</code></p>
+<p>Now set the github proxy by</p>
+<p><code>git config --global http.proxy http://localhost:10800</code></p>
+<p><code>git config --global https.proxy http://localhost:10800</code></p>
+<p>Now you are able to access Github on the server via your local proxy client.</p>
+<h3 id="Dynamic-Port-Forwarding"><a href="#Dynamic-Port-Forwarding" class="headerlink" title="Dynamic Port Forwarding"></a>Dynamic Port Forwarding</h3><p>Dynamic port forwarding allows us to tunnel all web traffic from one port, which acts like a SOCKS protocol. It is more powerful than local port forwarding since regardless what random port our web browser opens, the traffic is tunneled. This also keeps all DNS name resolution and connectivity to be the same as the proxy server.</p>
+<h4 id="Use-Case-4-Access-extranet-without-authentication-on-the-client-Yet-An-Another-Approach"><a href="#Use-Case-4-Access-extranet-without-authentication-on-the-client-Yet-An-Another-Approach" class="headerlink" title="Use Case #4: Access extranet without authentication on the client (Yet An Another Approach)"></a>Use Case #4: Access extranet without authentication on the client (Yet An Another Approach)</h4><p>On campus all our network traffic to extranet is charged. However all intranet traffic does not. We can exploit this to first tunnel our web traffic to the server at the outer company. Since the traffic on that server accesses the internet for free, we can bypass the charging system.</p>
+<p>One of the many approaches are set a proxy (for example, <code>squid</code>) at the proxy server and starts a local remote forwarding (e.g., from <code>sAddr:3389</code> to <code>localhost:1080</code>) and we get a local http proxy port. A more flexible approach is to use dynamic port forwarding by executing <code>ssh -D 1080 sAddr</code>. Now we have a SOCKS port at <code>localhost:1080</code>. Any modern web browser can support socks proxying.</p>
+<h3 id="Advanced-Features-Auto-Reconnect-Check-Connectivity"><a href="#Advanced-Features-Auto-Reconnect-Check-Connectivity" class="headerlink" title="Advanced Features: Auto Reconnect, Check Connectivity"></a>Advanced Features: Auto Reconnect, Check Connectivity</h3><p>To keep our port always on, we can restart the ssh commands periodically. A simpler way is to use software, e.g., <code>Mobaxterm</code> and <code>Bitvise SSH Client</code>. They can continually monitor the states and the forwarding entries for you.</p>
+<h3 id="A-Dream-Overlay-Local-Area-Internet"><a href="#A-Dream-Overlay-Local-Area-Internet" class="headerlink" title="A Dream: Overlay Local Area Internet"></a>A Dream: Overlay Local Area Internet</h3><p>When I was a child, it always frustrates me that most popular multi-player computer games can only be played on LAN. Hereafter, several centralized gaming platforms have grown big (and later faded away), by hooking the sockets in the binary and starting a small VPN. This works well if all the players are near the central server. However, it would be definitely better to build a decentralized platform where people start their own relay servers (e.g., on the edge), and support a virtual LAN. It can be even better if such relay servers help with each other to find the shortest route path, even if the networks are not related, which forms an overlay internet of local areas (Overlay LAI). In that dreamland people do not locate each other by complicated (and dynamic) IP addresses but by memorizable passphrases. Note that this has already kind of been a trend in file transmission, where traditional <code>scp</code>/<code>rsync</code> are replaced by the emerging <code>wormhole</code>. I hope cloud and edge computing are making us more closed than ever.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+	
+	
+      <div>
+        <div>
+	
+		<div style="text-align: center; color: #000; font-size: 14px;">---以上---</div>
+    
+</div>
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/05/28/lyric-sharing-04/" rel="next" title="lyric-sharing-04.md">
+                <i class="fa fa-chevron-left"></i> lyric-sharing-04.md
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNzg1OC8xNDM4OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Yiwei Li" />
+            
+              <p class="site-author-name" itemprop="name">Yiwei Li</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="http://github.com/leepoly/" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                我的儿子们
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ppnuts.com/" title="帅气的lph" target="_blank">帅气的lph</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lgd.gd/" title="帅气的lgd" target="_blank">帅气的lgd</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Why-and-Why-Not-Port-Forwarding"><span class="nav-number">1.</span> <span class="nav-text">Why and Why Not Port Forwarding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Local-Port-Forwarding"><span class="nav-number">2.</span> <span class="nav-text">Local Port Forwarding</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Use-Case-1-Use-jupyter-notebook-remotely-on-the-client"><span class="nav-number">2.1.</span> <span class="nav-text">Use Case #1: Use jupyter notebook remotely on the client</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Use-Case-2-Forward-remote-desktop-on-the-client"><span class="nav-number">2.2.</span> <span class="nav-text">Use Case #2: Forward remote desktop on the client</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Remote-Port-Forwarding"><span class="nav-number">3.</span> <span class="nav-text">Remote Port Forwarding</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Use-Case-3-Use-local-ssr-to-access-github-on-the-server"><span class="nav-number">3.1.</span> <span class="nav-text">Use Case #3: Use local ssr to access github on the server</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dynamic-Port-Forwarding"><span class="nav-number">4.</span> <span class="nav-text">Dynamic Port Forwarding</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Use-Case-4-Access-extranet-without-authentication-on-the-client-Yet-An-Another-Approach"><span class="nav-number">4.1.</span> <span class="nav-text">Use Case #4: Access extranet without authentication on the client (Yet An Another Approach)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Advanced-Features-Auto-Reconnect-Check-Connectivity"><span class="nav-number">5.</span> <span class="nav-text">Advanced Features: Auto Reconnect, Check Connectivity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#A-Dream-Overlay-Local-Area-Internet"><span class="nav-number">6.</span> <span class="nav-text">A Dream: Overlay Local Area Internet</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yiwei Li</span>
+
+  
+</div>
+
+
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
