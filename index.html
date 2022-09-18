@@ -268,6 +268,258 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/18/fpga-zcu102-lvna-reproduction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiwei Li">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lyw">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/09/18/fpga-zcu102-lvna-reproduction/" itemprop="url">在FPGA zcu102上复现LvNA项目 (LvNA Reproduction on FPGA zcu102 Board)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-09-18T14:52:34+08:00">
+                2022-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>LvNA是国内一个基于Rocket Chip的RISC-V核项目, 为处理器设计和开发提供方便的仿真和上板支持, <a href="https://github.com/LvNA-system/labeled-RISC-V/" target="_blank" rel="noopener">跳转链接</a>. 本文将介绍如何在FPGA zcu102上复现LvNA项目, 前半部分是上板步骤, 后面列举了复现时本人遇到的问题, 希望帮助后来的同学缩短调试时间. 文章基于官方提供的<a href="https://github.com/LvNA-system/labeled-RISC-V/tree/master/fpga" target="_blank" rel="noopener">上板指导</a>, 和另一位同学的<a href="https://github.com/Gallium70/labeled-RISC-V-reproduction-note" target="_blank" rel="noopener">复现指南</a>. 但因为本人的使用环境和已有的两份指导不完全一致, 直接照搬官方指导无法上板, 造成了一些困惑和麻烦, 因此有必要记录本人的详细环境, 遇到的问题和解决办法, 仅供参考.</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2022/09/18/fpga-zcu102-lvna-reproduction/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+	
+	
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/06/17/virtualize-environment-with-docker/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiwei Li">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lyw">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/06/17/virtualize-environment-with-docker/" itemprop="url">用Docker容器虚拟化开发环境 (Virtualizing Linux Environment with Docker Containers)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-06-17T22:25:35+08:00">
+                2022-06-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>At most times, we want to prepare different files, dependent packages, and environment variables for different projects. Simply mixing everything in the base environment would obviously make the only environment cumbersome and troublesome. For python packages we have <code>venv</code> tool to manage multiple python package environments. For general Linux OS, docker containers can be used for the similar purpose. In this blog we discuss with two specific Docker use cases: <strong>develop without sudo</strong> and <strong>isolate different users without adduser</strong>.</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2022/06/17/virtualize-environment-with-docker/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+	
+	
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/06/27/port-forwarding-usage/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1351,283 +1603,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/16/how-to-update-glib-without-sudo/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Yiwei Li">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lyw">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/16/how-to-update-glib-without-sudo/" itemprop="url">how-to-update-glib-without-sudo</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-16T12:06:45+08:00">
-                2018-11-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="如何解决glib-so-6-Not-Found问题（不用sudo提权）"><a href="#如何解决glib-so-6-Not-Found问题（不用sudo提权）" class="headerlink" title="如何解决glib.so.6 - Not Found问题（不用sudo提权）"></a>如何解决glib.so.6 - Not Found问题（不用sudo提权）</h4><p>最近在帮室友安装一个python包时，安装完后import出现类似<code>/usr/glib.so.6: version &#39;GLIB_2.14&#39; not found</code>的问题。</p>
-<p>本文是对<a href="https://github.com/materialsproject/pymatgen/issues/1172的一个总结" target="_blank" rel="noopener">https://github.com/materialsproject/pymatgen/issues/1172的一个总结</a></p>
-<p>出现原因：服务器上的glib库版本太旧，不能支持2.14版本，可以通过下列命令查看自己的glib版本：<code>strings /lib/libc.so.6 | grep GLIBC</code></p>
-<p>解决方案：</p>
-<ul>
-<li><p>首先尝试卸载包后重新安装（基本无效）；</p>
-</li>
-<li><p>如果自己的用户在超级用户组中，或者直接有root权限，可以用<a href="http://www.lightofdawn.org/wiki/wiki.cgi/NewAppsOnOldGlibc中所说的weaken" target="_blank" rel="noopener">http://www.lightofdawn.org/wiki/wiki.cgi/NewAppsOnOldGlibc中所说的weaken</a> glib dependencies的方法，暴力的修改glib.so文件中，为其增加2.14相应的函数入口实现。这个方法理论上可行，但没有尝试过。</p>
-</li>
-<li><p>重新下载最新版glib并编译，安装在自己的用户目录下（不用提权），介绍安装方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">mkdir ~/glibc_install; cd ~/glibc_install </span><br><span class="line"></span><br><span class="line">wget http://ftp.gnu.org/gnu/glibc/glibc-2.14.tar.gz</span><br><span class="line"></span><br><span class="line">tar zxvf glibc-2.14.tar.gz</span><br><span class="line"></span><br><span class="line">cd glibc-2.14</span><br><span class="line"></span><br><span class="line">mkdir build</span><br><span class="line"></span><br><span class="line">cd build</span><br><span class="line"></span><br><span class="line">../configure --prefix=/home/yourusername/glibc #此处直接安装到自己目录下，就不用特权了</span><br><span class="line"></span><br><span class="line">make -j4 #4是指线程数</span><br><span class="line"></span><br><span class="line">sudo make install</span><br><span class="line"></span><br><span class="line">export LD_LIBRARY_PATH=/home/yourusername/glibc/lib</span><br></pre></td></tr></table></figure>
-<p>之后在python中成功import。</p>
-<p>可以将最后一句放在<code>~/.bashrc</code>中，这样以后不用每次export了</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-	
-	
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/08/chisel-note/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Yiwei Li">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lyw">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/08/chisel-note/" itemprop="url">Scala&Chisel学习笔记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-08T21:03:55+08:00">
-                2018-11-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <blockquote class="blockquote-center"><p><strong>Scala&amp;Chisel学习笔记</strong></p>
-</blockquote>
-<p>注：本人学习Chisel和Scala的笔记</p>
-<p>材料主要来源：<a href="https://github.com/freechipsproject/chisel-bootcamp" target="_blank" rel="noopener">https://github.com/freechipsproject/chisel-bootcamp</a></p>
-<p>欢迎留言讨论</p>
-<hr>
-<ol>
-<li><p>Interpolated string</p>
-<p>println(s”wordwordword$var”)</p>
-<p>printf(p”$io”)</p>
-<p>s”wordwordword${max + max}”</p>
-</li>
-<li><p>seq操作</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> seq = <span class="type">Seq</span>(<span class="string">"a"</span>, <span class="number">1</span>, <span class="number">0.0</span>)</span><br><span class="line"></span><br><span class="line">seq.foreach &#123; x =&gt; &#123;</span><br><span class="line"></span><br><span class="line">   	...&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/11/08/chisel-note/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-	
-	
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1680,7 +1655,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">24</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1693,7 +1668,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

@@ -268,6 +268,283 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/16/how-to-update-glib-without-sudo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiwei Li">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lyw">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/16/how-to-update-glib-without-sudo/" itemprop="url">how-to-update-glib-without-sudo</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-16T12:06:45+08:00">
+                2018-11-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="如何解决glib-so-6-Not-Found问题（不用sudo提权）"><a href="#如何解决glib-so-6-Not-Found问题（不用sudo提权）" class="headerlink" title="如何解决glib.so.6 - Not Found问题（不用sudo提权）"></a>如何解决glib.so.6 - Not Found问题（不用sudo提权）</h4><p>最近在帮室友安装一个python包时，安装完后import出现类似<code>/usr/glib.so.6: version &#39;GLIB_2.14&#39; not found</code>的问题。</p>
+<p>本文是对<a href="https://github.com/materialsproject/pymatgen/issues/1172的一个总结" target="_blank" rel="noopener">https://github.com/materialsproject/pymatgen/issues/1172的一个总结</a></p>
+<p>出现原因：服务器上的glib库版本太旧，不能支持2.14版本，可以通过下列命令查看自己的glib版本：<code>strings /lib/libc.so.6 | grep GLIBC</code></p>
+<p>解决方案：</p>
+<ul>
+<li><p>首先尝试卸载包后重新安装（基本无效）；</p>
+</li>
+<li><p>如果自己的用户在超级用户组中，或者直接有root权限，可以用<a href="http://www.lightofdawn.org/wiki/wiki.cgi/NewAppsOnOldGlibc中所说的weaken" target="_blank" rel="noopener">http://www.lightofdawn.org/wiki/wiki.cgi/NewAppsOnOldGlibc中所说的weaken</a> glib dependencies的方法，暴力的修改glib.so文件中，为其增加2.14相应的函数入口实现。这个方法理论上可行，但没有尝试过。</p>
+</li>
+<li><p>重新下载最新版glib并编译，安装在自己的用户目录下（不用提权），介绍安装方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">mkdir ~/glibc_install; cd ~/glibc_install </span><br><span class="line"></span><br><span class="line">wget http://ftp.gnu.org/gnu/glibc/glibc-2.14.tar.gz</span><br><span class="line"></span><br><span class="line">tar zxvf glibc-2.14.tar.gz</span><br><span class="line"></span><br><span class="line">cd glibc-2.14</span><br><span class="line"></span><br><span class="line">mkdir build</span><br><span class="line"></span><br><span class="line">cd build</span><br><span class="line"></span><br><span class="line">../configure --prefix=/home/yourusername/glibc #此处直接安装到自己目录下，就不用特权了</span><br><span class="line"></span><br><span class="line">make -j4 #4是指线程数</span><br><span class="line"></span><br><span class="line">sudo make install</span><br><span class="line"></span><br><span class="line">export LD_LIBRARY_PATH=/home/yourusername/glibc/lib</span><br></pre></td></tr></table></figure>
+<p>之后在python中成功import。</p>
+<p>可以将最后一句放在<code>~/.bashrc</code>中，这样以后不用每次export了</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+	
+	
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/08/chisel-note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiwei Li">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lyw">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/08/chisel-note/" itemprop="url">Scala&Chisel学习笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-08T21:03:55+08:00">
+                2018-11-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <blockquote class="blockquote-center"><p><strong>Scala&amp;Chisel学习笔记</strong></p>
+</blockquote>
+<p>注：本人学习Chisel和Scala的笔记</p>
+<p>材料主要来源：<a href="https://github.com/freechipsproject/chisel-bootcamp" target="_blank" rel="noopener">https://github.com/freechipsproject/chisel-bootcamp</a></p>
+<p>欢迎留言讨论</p>
+<hr>
+<ol>
+<li><p>Interpolated string</p>
+<p>println(s”wordwordword$var”)</p>
+<p>printf(p”$io”)</p>
+<p>s”wordwordword${max + max}”</p>
+</li>
+<li><p>seq操作</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> seq = <span class="type">Seq</span>(<span class="string">"a"</span>, <span class="number">1</span>, <span class="number">0.0</span>)</span><br><span class="line"></span><br><span class="line">seq.foreach &#123; x =&gt; &#123;</span><br><span class="line"></span><br><span class="line">   	...&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/08/chisel-note/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+	
+	
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/15/lyric-sharing-03/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1313,279 +1590,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/07/win7-devcon-use/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Yiwei Li">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lyw">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/07/win7-devcon-use/" itemprop="url">win7里使用命令行检测硬件改动</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-07T16:26:44+08:00">
-                2018-04-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>最近从win10换成win7，惠普自带的USB鼠标总出现检测不到的问题，需要手动检测硬件改动才能重新使用光鼠。</p>
-<p>起初一直是用计算机-&gt;管理-&gt;设备管理器-&gt;检测硬件改动来实现，特别麻烦，今天在网上找到一个微软的工具可以解决这个问题。</p>
-<p><code>devcon</code></p>
-<p>这是一个微软给早期系统(2003及以前)的设备管理的命令行工具，相当于命令行的设备管理器。</p>
-<p>微软的官网下载连接已经坏掉。。。网上有32位的和IA64位（基本没用，因为现在个人电脑的64位都不是IA64架构），百度这个工具下载后可以运行</p>
-<p>参数摘录如下</p>
-<blockquote>
-</blockquote>
-<p>devcon.exe [-r] [-m:\\&lt;machine&gt;] &lt;command&gt; [&lt;arg&gt;]<br>-r if specified will reboot machine after command is complete, if needed.<br>&lt;machine&gt; 目标机器名字.<br>&lt;command&gt; 命令(见下面).<br>&lt;arg&gt;传给命令的参数.<br>For help on a specific command, type: devcon.exe help <command><br>classfilter       允许修改class filters.<br>classes         显示设备安装classes.<br>disable         用指定的硬件名称或者instance ID禁用设备<br>driverfiles       列出设备安装的驱动文件.<br>drivernodes     显示设备的所有节点的驱动.<br>enable          用指定的硬件名称或者instance ID启用设备.<br>find            用指定的硬件名称或者instance ID查找设备.<br>findall          查找所有硬件设备包括不显示的.<br>help            显示帮助信息.<br>hwids           显示设备硬件ID.<br>install           手动安装设备.<br>listclass         显示所有设备的安装 class.<br>reboot          重启本地机器.<br>remove          用指定的硬件名称或者instance ID删除设备.<br><strong>rescan          从新扫描硬件信息.   我们要的就是这一个</strong><br>resources        显示设备使用的硬件资源.<br>restart           用指定的硬件名称或者instance ID重启设备.<br>stack            列出设备的驱动堆栈.<br>status           列出设备的状态.<br>update          手动更新设备驱动.<br>updateNI        不显示用户界面的更新设备状态<br>SetHwID        添加、删除、编辑硬件ID的顺序.</p>
-<p>所以设一个计划任务或者用脚本定时什么的，方便多了。</p>
-<p>另外有人说win7下不成功的情况，在<a href="https://answers.microsoft.com/en-us/windows/forum/windows_7-hardware/devcon-not-working-correctly-in-windows-7/9abcc12c-d7db-4249-aec4-fc4ff0ea6ee8" target="_blank" rel="noopener">https://answers.microsoft.com/en-us/windows/forum/windows_7-hardware/devcon-not-working-correctly-in-windows-7/9abcc12c-d7db-4249-aec4-fc4ff0ea6ee8</a> 这个帖子下有一个解决方法（win7 64位），大意是提取amd64版本的devcon，因为本人没有遇到，就没有去试了。</p>
-<p>至于每次打开会有win7的UAC提示（毕竟是老程序了）什么的，以后再专门写个文章处理添加信任的问题~</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-	
-	
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/11/dual-ubuntu-win-setup-instruction/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Yiwei Li">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lyw">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/08/11/dual-ubuntu-win-setup-instruction/" itemprop="url">win7+ubuntu16.04LTS双系统安装方法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-11T00:00:00+08:00">
-                2017-08-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>经过很久的努力查阅网上各种资料终于找到了比较完美的安装ubuntu双系统的方法。</p>
-<p><em>Step0　　首先保证能用的windows系统</em></p>
-<p><em>Step1　　用傲梅分区助手划出至少30G的空间（选择这个分区工具可以看到分区表是不是GPT规格的，比较方便），为了保险可以保存一下分区表</em></p>
-<p><em>Step2　　制作启动U盘，这里用Rufus做启动盘，个人觉得超级好用而且快（相对于UltraISO）</em>。</p>
-<p>方案选择GPT+UEFI方案（最好的）<br>启动ISO选择ubuntu的安装包</p>
-<p><em>Step3　　BIOS设置</em></p>
-<p>设置启动顺序，U盘启动顺序调高（其实也可以不调，我自己的笔记本是可以在启动时候按ESC上下选择启动设备的）</p>
-<p>开启UEFI（不选legacy），注意把UEFI的安全启动项关掉（Ubuntu里带有第三方的mp3解码文件）</p>
-<p><em>Step4　　安装Ubuntu</em></p>
-<p>注意点如下：</p>
-<p><strong>不用联网，这样安装更快</strong></p>
-<p>分区设置如下：</p>
-<ul>
-<li>4000MB（内存大小） 交换分区 主分区</li>
-<li>500MB EFI分区 逻辑分区</li>
-<li>30000MB（系统空间） ext4 挂载/ 逻辑分区</li>
-<li>剩下空间 ext4 挂载/home 逻辑分区`</li>
-</ul>
-<p>ubuntu启动器的分区 <strong>选择EFI所在分区的分区号</strong></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-	
-	
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1638,7 +1642,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">24</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1651,7 +1655,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

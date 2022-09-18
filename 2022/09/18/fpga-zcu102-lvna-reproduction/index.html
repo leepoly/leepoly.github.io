@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/icons/safari-pinned-tab.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+
+
+
+  <meta name="keywords" content="tech, fpga,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="LvNA是国内一个基于Rocket Chip的RISC-V核项目, 为处理器设计和开发提供方便的仿真和上板支持, 跳转链接. 本文将介绍如何在FPGA zcu102上复现LvNA项目, 前半部分是上板步骤, 后面列举了复现时本人遇到的问题, 希望帮助后来的同学缩短调试时间. 文章基于官方提供的上板指导, 和另一位同学的复现指南. 但因为本人的使用环境和已有的两份指导不完全一致, 直接照搬官方指导无">
+<meta name="keywords" content="tech, fpga">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在FPGA zcu102上复现LvNA项目 (LvNA Reproduction on FPGA zcu102 Board)">
+<meta property="og:url" content="http://yoursite.com/2022/09/18/fpga-zcu102-lvna-reproduction/index.html">
+<meta property="og:site_name" content="Lyw">
+<meta property="og:description" content="LvNA是国内一个基于Rocket Chip的RISC-V核项目, 为处理器设计和开发提供方便的仿真和上板支持, 跳转链接. 本文将介绍如何在FPGA zcu102上复现LvNA项目, 前半部分是上板步骤, 后面列举了复现时本人遇到的问题, 希望帮助后来的同学缩短调试时间. 文章基于官方提供的上板指导, 和另一位同学的复现指南. 但因为本人的使用环境和已有的两份指导不完全一致, 直接照搬官方指导无">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2022-09-18T05:59:12.131Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在FPGA zcu102上复现LvNA项目 (LvNA Reproduction on FPGA zcu102 Board)">
+<meta name="twitter:description" content="LvNA是国内一个基于Rocket Chip的RISC-V核项目, 为处理器设计和开发提供方便的仿真和上板支持, 跳转链接. 本文将介绍如何在FPGA zcu102上复现LvNA项目, 前半部分是上板步骤, 后面列举了复现时本人遇到的问题, 希望帮助后来的同学缩短调试时间. 文章基于官方提供的上板指导, 和另一位同学的复现指南. 但因为本人的使用环境和已有的两份指导不完全一致, 直接照搬官方指导无">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/09/18/fpga-zcu102-lvna-reproduction/">
+
+
+
+
+
+  <title>在FPGA zcu102上复现LvNA项目 (LvNA Reproduction on FPGA zcu102 Board) | Lyw</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Lyw</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-game">
+          <a href="/game/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br>
+            
+            game
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/18/fpga-zcu102-lvna-reproduction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiwei Li">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lyw">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">在FPGA zcu102上复现LvNA项目 (LvNA Reproduction on FPGA zcu102 Board)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-09-18T14:52:34+08:00">
+                2022-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>LvNA是国内一个基于Rocket Chip的RISC-V核项目, 为处理器设计和开发提供方便的仿真和上板支持, <a href="https://github.com/LvNA-system/labeled-RISC-V/" target="_blank" rel="noopener">跳转链接</a>. 本文将介绍如何在FPGA zcu102上复现LvNA项目, 前半部分是上板步骤, 后面列举了复现时本人遇到的问题, 希望帮助后来的同学缩短调试时间. 文章基于官方提供的<a href="https://github.com/LvNA-system/labeled-RISC-V/tree/master/fpga" target="_blank" rel="noopener">上板指导</a>, 和另一位同学的<a href="https://github.com/Gallium70/labeled-RISC-V-reproduction-note" target="_blank" rel="noopener">复现指南</a>. 但因为本人的使用环境和已有的两份指导不完全一致, 直接照搬官方指导无法上板, 造成了一些困惑和麻烦, 因此有必要记录本人的详细环境, 遇到的问题和解决办法, 仅供参考.</p>
+<a id="more"></a>
+<h2 id="本文和已有指南的区别及简单原因"><a href="#本文和已有指南的区别及简单原因" class="headerlink" title="本文和已有指南的区别及简单原因"></a>本文和已有指南的区别及简单原因</h2><p>官方指南系统性描述了上板步骤, 但是在fpga/boot/README.md里的步骤里, 由用户下载并编译ATF, FSBL和u-boot, 可能因为嵌入的脚本和最新的板子型号对不上, 经测试无法成功上板, 会出现Flash型号识别失败<code>SF: unrecognized JEDEC id bytes</code>, 详细见<a href="https://github.com/LvNA-system/labeled-RISC-V/issues/7" target="_blank" rel="noopener">常见问题#1</a>. 所以本文采用了Xilinx更推荐的PetaLinux对boot镜像和Linux进行编译和打包, 以避免脚本无法对应的问题.</p>
+<p>尤同学的复现指南和本文在环境上有一些区别: 1) 前人复现指南的部分命令基于WSL, 本文的工作机器为Linux环境, 上板串口连接mac机器. 不同的环境并不会造成很大区别.  2) 前人复现指南没有将bitstream放入FSBL, 需要手动加载, 本文使用PetaLinux自动打包后可以直接进入Linux环境. 3) 另外, 本文尽可能沿用了LvNA官方的prm-sw仓库进行RISCV subsystem通信.</p>
+<h2 id="环境说明"><a href="#环境说明" class="headerlink" title="环境说明"></a>环境说明</h2><p>平台和软件</p>
+<ul>
+<li>LvNA项目commit最新版: (Labeled-RISC-V) f6895ab. (prm-sw) 0f655a9.</li>
+<li>Xilinx Vivado 2019.1</li>
+<li>Xilinx PetaLinux 2019.2 （经测试, 2019.1的PetaLinux无法编译上板, 请查看常见问题#2）</li>
+<li>zcu102 BSP v2019.2</li>
+<li>工作环境 Ubuntu 18.04 (运行LvNA仿真, Vivado综合, PetaLinux编译)</li>
+<li>串口调试环境 macOS Monterey 12.5.1</li>
+</ul>
+<p>硬件</p>
+<ul>
+<li>FPGA zcu102开发版, rev1.1</li>
+</ul>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><h3 id="1-确认LvNA仿真和复现成功"><a href="#1-确认LvNA仿真和复现成功" class="headerlink" title="1. 确认LvNA仿真和复现成功"></a>1. 确认LvNA仿真和复现成功</h3><p>请按照LvNA官方README操作, 执行到Run with FPGA结束, 成功生成bitstream, 路径在<code>fpga/board/zcu102/build/&lt;yourname&gt;-zcu102/&lt;yourname&gt;-zcu102.runs/impl_1/system_top.bit</code>, 后文称<code>&lt;path-to-bitstream&gt;</code>.</p>
+<h3 id="2-Prepare-SD-Card"><a href="#2-Prepare-SD-Card" class="headerlink" title="2. Prepare SD Card"></a>2. Prepare SD Card</h3><p>请使用本文步骤代替官方boot/README.md.</p>
+<p>激活PetaLinux环境，确认没有再要求安装更多的包.</p>
+<p><code>source &lt;path-to-petalinux&gt;/settings.sh</code></p>
+<p>使用PetaLinux创建一个新的boot工程:</p>
+<p><code>petalinux-create -t project -n &lt;yourname&gt; -s &lt;path-to-zcu102-bsp&gt;/xilinx-zcu102-v2019.2-final.bsp</code></p>
+<p>进入Vivado, 生成硬件描述文件: File -&gt; Export -&gt; Export Hardware… 无需勾选Include bitstream. 对于2019.1版本, 生成的文件路径<code>&lt;yourname&gt;-zcu102.sdk/system_top.hdf</code>. 对于2019.2版本, 生成的文件为XSA, 请按照<a href="https://github.com/Gallium70/labeled-RISC-V-reproduction-note#bootbin" target="_blank" rel="noopener">此部分</a>转换为hdf.</p>
+<p>进入工程目录, 导入hdf配置:</p>
+<p><code>cd &lt;yourname&gt;</code></p>
+<p><code>petalinux-config --get-hw-description=&lt;yourname&gt;-zcu102.sdk/</code></p>
+<p>注意只需要精确到sdk所在目录的路径.</p>
+<p>配置过程中会弹出选项, 请按照如下配置:</p>
+<ul>
+<li>select Image Packaging Configuration -&gt; Root filesystem type (EXT (SD/eMMC/QSPI/SATA/USB))</li>
+<li>unchosen Image Packaging Configuration -&gt; Copy final images to tftpboot</li>
+</ul>
+<p>配置linux kernel:</p>
+<p><code>petalinux-config -c kernel</code></p>
+<p>配置过程中会弹出选项, 请按照如下配置:</p>
+<ul>
+<li>unchose General setup -&gt; Initial RAM filesystem and RAM disk (initramfs/initrd) support</li>
+<li>unchose Kernel hacking -&gt; Filter access to /dev/mem</li>
+</ul>
+<p>导入PS端LvNA额外的device tree blob配置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cat project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi</span><br><span class="line">/ &#123;</span><br><span class="line">  chosen &#123;</span><br><span class="line">    bootargs = &quot;root=/dev/mmcblk0p2 rootfstype=ext4 rootwait earlycon clk_ignore_unused cpuidle.off=1 console=ttyPS0,115200&quot;;</span><br><span class="line">  &#125;;</span><br><span class="line">  reserved-memory &#123;</span><br><span class="line">    #address-cells = &lt;2&gt;;</span><br><span class="line">    #size-cells = &lt;2&gt;;</span><br><span class="line">    ranges;</span><br><span class="line"></span><br><span class="line">    mem_reserved: buffer@800000000 &#123;</span><br><span class="line">      reg = &lt;0x00000008 0x00000000 0x0 0x80000000&gt;;</span><br><span class="line">    &#125;;</span><br><span class="line">    // ultraZ only has 2GB memory for PS, change the setting above accordingly</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>编译Linux kernel:</p>
+<p><code>petalinux-build</code></p>
+<p>打包BOOT.BIN:</p>
+<p><code>petalinux-package --boot --format BIN --fsbl images/linux/zynqmp_fsbl.elf --u-boot --fpga &lt;path-to-bitstream&gt;</code></p>
+<p>将images/linux目录下的<code>BOOT.BIN</code>和<code>image.ub</code>拷贝到SD卡的第一个分区.</p>
+<h3 id="3-准备SD卡第二个分区"><a href="#3-准备SD卡第二个分区" class="headerlink" title="3. 准备SD卡第二个分区"></a>3. 准备SD卡第二个分区</h3><p>这部分请参考<a href="https://github.com/LvNA-system/labeled-RISC-V/blob/master/fpga/boot/README.md#build-rootfs-in-sd-card" target="_blank" rel="noopener">官方指导</a>.</p>
+<p>请注意本文在<code>qemu-debootstrap</code>指令时遇到segmentation fault, 需切换到非最新版debian, 例如:</p>
+<p><code>sudo qemu-debootstrap --arch arm64 buster /mnt http://ftp.debian.org/debian</code></p>
+<h3 id="4-串口调试-PS-boot"><a href="#4-串口调试-PS-boot" class="headerlink" title="4. 串口调试 (PS boot)"></a>4. 串口调试 (PS boot)</h3><p>确保SD卡已经按照上述步骤准备好:</p>
+<ul>
+<li>分区1 (mmcblk0p1或sdb1或其他名字), FAT文件系统, 包含BOOT.BIN和image.ub.</li>
+<li>分区2 (mmcblk0p2或sdb2或其他名字), EXT4文件系统, 包含debian rootfs.</li>
+</ul>
+<p>插入SD卡, 调整FPGA板到boot mode, <a href="https://github.com/Gallium70/labeled-RISC-V-reproduction-note#%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F%E8%AE%BE%E7%BD%AE" target="_blank" rel="noopener">参考</a>. 或者从官方指导Set your board to SD boot mode<a href="https://github.com/LvNA-system/labeled-RISC-V/tree/master/fpga#set-your-board-to-sd-boot-mode" target="_blank" rel="noopener">这里</a>继续.</p>
+<p>准备串口连接的驱动:</p>
+<p><a href="https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers" target="_blank" rel="noopener">https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers</a></p>
+<p>连接USB线从FPGA J83口到macOS, 通过<code>ls /dev/tty.*</code>查看串口设备名, 例如<code>/dev/tty.SLAB_USBtoUART</code>. 一共有四个设备, 出现boot log的设备名随机. 本人设备表为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ls /dev/tty.SLAB_USBtoUART*</span><br><span class="line">/dev/tty.SLAB_USBtoUART  /dev/tty.SLAB_USBtoUART4 /dev/tty.SLAB_USBtoUART5 /dev/tty.SLAB_USBtoUART6</span><br></pre></td></tr></table></figure>
+<p>串口的波特率为115200. mac端访问方式如下:</p>
+<ul>
+<li>minicom: <code>minicom -D /dev/tty.SLAB_USBtoUART</code></li>
+<li>screen: <code>screen /dev/tty.SLAB_USBtoUART 115200</code></li>
+<li>(收费) Serial 2: <a href="https://www.decisivetactics.com/products/serial/" target="_blank" rel="noopener">https://www.decisivetactics.com/products/serial/</a>. 软件自带串口驱动, 如果mac驱动安装失败可以尝试.</li>
+</ul>
+<p>请确保按照官方指导, 可以访问PS部分的debian Linux, 正确的boot log串口输出如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line">Xilinx Zynq MP First Stage Boot Loader</span><br><span class="line">Release 2019.2   Sep 15 2022  -  07:26:54</span><br><span class="line">NOTICE:  ATF running on XCZU9EG/silicon v4/RTL5.1 at 0xfffea000</span><br><span class="line">NOTICE:  BL31: Secure code at 0x0</span><br><span class="line">NOTICE:  BL31: Non secure code at 0x10080000</span><br><span class="line">NOTICE:  BL31: v2.0(release):xilinx-v2019.1-12-g713dace9</span><br><span class="line">NOTICE:  BL31: Built : 07:24:40, Sep 15 2022</span><br><span class="line">PMUFW:  v1.1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">U-Boot 2019.01 (Sep 15 2022 - 07:25:42 +0000)</span><br><span class="line"></span><br><span class="line">Model: ZynqMP ZCU102 Rev1.0</span><br><span class="line">Board: Xilinx ZynqMP</span><br><span class="line">DRAM:  4 GiB</span><br><span class="line">EL Level:       EL2</span><br><span class="line">Chip ID:        zu9eg</span><br><span class="line">MMC:   mmc@ff170000: 0</span><br><span class="line">Loading Environment from FAT... *** Warning - bad CRC, using default environment</span><br><span class="line"></span><br><span class="line">In:    serial@ff000000</span><br><span class="line">Out:   serial@ff000000</span><br><span class="line">Err:   serial@ff000000</span><br><span class="line">Model: ZynqMP ZCU102 Rev1.0</span><br><span class="line">Board: Xilinx ZynqMP</span><br><span class="line">Bootmode: LVL_SHFT_SD_MODE1</span><br><span class="line">Reset reason:   EXTERNAL</span><br><span class="line">Net:   ZYNQ GEM: ff0e0000, phyaddr c, interface rgmii-id</span><br><span class="line"></span><br><span class="line">Warning: ethernet@ff0e0000 MAC addresses don&apos;t match:</span><br><span class="line">Address in ROM is          01:02:03:04:05:06</span><br><span class="line">Address in environment is  00:0a:35:00:22:01</span><br><span class="line">eth0: ethernet@ff0e0000</span><br><span class="line">U-BOOT for xilinx-zcu102-2019_2</span><br><span class="line"></span><br><span class="line">ethernet@ff0e0000 Waiting for PHY auto negotiation to complete..........</span><br><span class="line"></span><br><span class="line">Device: mmc@ff170000</span><br><span class="line">Manufacturer ID: 3</span><br><span class="line">OEM: 5344</span><br><span class="line">Name: SB16G </span><br><span class="line">Bus Speed: 187481250</span><br><span class="line">Mode : UHS SDR104 (208MHz)</span><br><span class="line">Rd Block Len: 512</span><br><span class="line">SD version 3.0</span><br><span class="line">High Capacity: Yes</span><br><span class="line">Capacity: 14.8 GiB</span><br><span class="line">Bus Width: 4-bit</span><br><span class="line">Erase Group Size: 512 Bytes</span><br><span class="line">63008056 bytes read in 4226 ms (14.2 MiB/s)</span><br><span class="line">## Loading kernel from FIT Image at 10000000 ...</span><br><span class="line">   Using &apos;conf@system-top.dtb&apos; configuration</span><br><span class="line">   Trying &apos;kernel@1&apos; kernel subimage</span><br><span class="line">     Description:  Linux kernel</span><br><span class="line">     Type:         Kernel Image</span><br><span class="line">     Compression:  uncompressed</span><br><span class="line">     Data Start:   0x10000108</span><br><span class="line">     Data Size:    18082304 Bytes = 17.2 MiB</span><br><span class="line">     Architecture: AArch64</span><br><span class="line">     OS:           Linux</span><br><span class="line">     Load Address: 0x00080000</span><br><span class="line">     Entry Point:  0x00080000</span><br><span class="line">     Hash algo:    sha1</span><br><span class="line">     Hash value:   9a1a6dc514e028d678da04a1713cfe8ffebaa9ef</span><br><span class="line">   Verifying Hash Integrity ... sha1+ OK</span><br><span class="line">## Loading ramdisk from FIT Image at 10000000 ...</span><br><span class="line">   Using &apos;conf@system-top.dtb&apos; configuration</span><br><span class="line">   Trying &apos;ramdisk@1&apos; ramdisk subimage</span><br><span class="line">     Description:  petalinux-user-image</span><br><span class="line">     Type:         RAMDisk Image</span><br><span class="line">     Compression:  gzip compressed</span><br><span class="line">     Data Start:   0x1114985c</span><br><span class="line">     Data Size:    44879689 Bytes = 42.8 MiB</span><br><span class="line">     Architecture: AArch64</span><br><span class="line">     OS:           Linux</span><br><span class="line">     Load Address: unavailable</span><br><span class="line">     Entry Point:  unavailable</span><br><span class="line">     Hash algo:    sha1</span><br><span class="line">     Hash value:   447a5a0d69e59eb70cc13fae7d8ae2b5b7e27462</span><br><span class="line">   Verifying Hash Integrity ... sha1+ OK</span><br><span class="line">## Loading fdt from FIT Image at 10000000 ...</span><br><span class="line">   Using &apos;conf@system-top.dtb&apos; configuration</span><br><span class="line">   Trying &apos;fdt@system-top.dtb&apos; fdt subimage</span><br><span class="line">     Description:  Flattened Device Tree blob</span><br><span class="line">     Type:         Flat Device Tree</span><br><span class="line">     Compression:  uncompressed</span><br><span class="line">     Data Start:   0x1113ec0c</span><br><span class="line">     Data Size:    43913 Bytes = 42.9 KiB</span><br><span class="line">     Architecture: AArch64</span><br><span class="line">     Hash algo:    sha1</span><br><span class="line">     Hash value:   761e4c91053bfb5754206eba17f8be4ace42158f</span><br><span class="line">   Verifying Hash Integrity ... sha1+ OK</span><br><span class="line">   Booting using the fdt blob at 0x1113ec0c</span><br><span class="line">   Loading Kernel Image ... OK</span><br><span class="line">   Loading Ramdisk to 76533000, end 78ffff49 ... OK</span><br><span class="line">   Loading Device Tree to 0000000007ff2000, end 0000000007fffb88 ... OK</span><br><span class="line"></span><br><span class="line">Starting kernel ...</span><br><span class="line"></span><br><span class="line">[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]</span><br><span class="line">[    0.000000] Linux version 4.19.0-xilinx-v2019.2 (oe-user@oe-host) (gcc version 8.2.0 (GCC)) #1 SMP Fri Oct 25 08:23:52 UTC 2019</span><br><span class="line">[    0.000000] Machine model: ZynqMP ZCU102 Rev1.0</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>PS端账号名和密码均为root.</p>
+<p>请确保PS端使用SD卡第二分区的文件系统, 而非initramfs. 只有前者可以在SD卡上保存文件更改.</p>
+<h3 id="5-串口调试-PL-boot"><a href="#5-串口调试-PL-boot" class="headerlink" title="5. 串口调试 (PL boot)"></a>5. 串口调试 (PL boot)</h3><p>请提前准备<a href="https://github.com/LvNA-system/labeled-RISC-V/tree/master/fpga#boot-risc-v-subsystem" target="_blank" rel="noopener">prm-sw代码</a>, 放到debian分区的<code>/home/root</code>目录下.</p>
+<p>prm-sw有一处dtb内容需修改, 补充以下内容, 完整文件请参考(<a href="https://github.com/Gallium70/labeled-RISC-V-boot/blob/main/zcu102.dts" target="_blank" rel="noopener">https://github.com/Gallium70/labeled-RISC-V-boot/blob/main/zcu102.dts</a>)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">serial@60000000 &#123;</span><br><span class="line">    compatible = &quot;sifive,uart0&quot;;</span><br><span class="line">    reg = &lt;0x00 0x60000000 0x00 0x1000&gt;;</span><br><span class="line">    reg-names = &quot;control&quot;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>可以按照官方教程操作<a href="https://github.com/LvNA-system/labeled-RISC-V/tree/master/fpga#boot-risc-v-subsystem" target="_blank" rel="noopener"></a>, SMP boot试验成功.</p>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><h3 id="1-按照官方LvNA-boot教程-PS-boot提示Flash型号识别失败SF-unrecognized-JEDEC-id-bytes"><a href="#1-按照官方LvNA-boot教程-PS-boot提示Flash型号识别失败SF-unrecognized-JEDEC-id-bytes" class="headerlink" title="1. 按照官方LvNA boot教程 PS boot提示Flash型号识别失败SF: unrecognized JEDEC id bytes"></a>1. 按照官方LvNA boot教程 PS boot提示Flash型号识别失败<code>SF: unrecognized JEDEC id bytes</code></h3><p>请按照本文使用PetaLinux生成BOOT.BIN文件.</p>
+<h3 id="2-使用PetaLinux生成的BOOT-BIN-boot-log卡在FSBL两行"><a href="#2-使用PetaLinux生成的BOOT-BIN-boot-log卡在FSBL两行" class="headerlink" title="2. 使用PetaLinux生成的BOOT.BIN, boot log卡在FSBL两行."></a>2. 使用PetaLinux生成的BOOT.BIN, boot log卡在FSBL两行.</h3><p>请检查PetaLinux和bsp版本, 使用2019.2</p>
+<h3 id="3-PetaLinux使用提示ERROR-Failed-to-generate-meta-plnx-generated-layer"><a href="#3-PetaLinux使用提示ERROR-Failed-to-generate-meta-plnx-generated-layer" class="headerlink" title="3. PetaLinux使用提示ERROR: Failed to generate meta-plnx-generated layer"></a>3. PetaLinux使用提示<code>ERROR: Failed to generate meta-plnx-generated layer</code></h3><p>详细的错误报告在<code>build/config.log</code>中, 请检查是否缺少依赖.</p>
+<p>如果不是依赖缺失, 可以尝试换用python2.0环境. 使用<code>virtualenv</code>创建python2.0环境, 并使用<code>source</code>命令进入环境再执行petalinux命令.</p>
+<h3 id="4-PL启动时提示init-mmap-failed"><a href="#4-PL启动时提示init-mmap-failed" class="headerlink" title="4. PL启动时提示init_mmap failed"></a>4. PL启动时提示<code>init_mmap failed</code></h3><p>请确保<code>petalinux-config -c kernel</code>配置时去掉勾选<code>Filter access to /dev/mem</code>.</p>
+<h3 id="5-riscv-linux-fpga-defconfig编译失败"><a href="#5-riscv-linux-fpga-defconfig编译失败" class="headerlink" title="5. riscv-linux fpga_defconfig编译失败"></a>5. <code>riscv-linux fpga_defconfig</code>编译失败</h3><p>可以移除initramfs.txt里不需要的库, 比如zlib, redis, …</p>
+<p>profile直接sudo copy进来，改chmod 755.</p>
+<h3 id="6-PL-boot时找不到串口端口-dev-ttyUL1"><a href="#6-PL-boot时找不到串口端口-dev-ttyUL1" class="headerlink" title="6. PL boot时找不到串口端口/dev/ttyUL1."></a>6. PL boot时找不到串口端口<code>/dev/ttyUL1</code>.</h3><p><code>petalinux-config</code>配置时确保没有勾选 <code>DTG settings -&gt;Remove PL from devicetree</code>.</p>
+<h3 id="7-PL-boot-log在SMP部分挂住"><a href="#7-PL-boot-log在SMP部分挂住" class="headerlink" title="7. PL boot log在SMP部分挂住"></a>7. PL boot log在SMP部分挂住</h3><p>请检查LvNAConfig.scala里的core数量要和PL dtb里的一致.</p>
+<p>更多问题, 欢迎讨论.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+	
+	
+      <div>
+        <div>
+	
+		<div style="text-align: center; color: #000; font-size: 14px;">---以上---</div>
+    
+</div>
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tech-fpga/" rel="tag"># tech, fpga</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/06/17/virtualize-environment-with-docker/" rel="next" title="用Docker容器虚拟化开发环境 (Virtualizing Linux Environment with Docker Containers)">
+                <i class="fa fa-chevron-left"></i> 用Docker容器虚拟化开发环境 (Virtualizing Linux Environment with Docker Containers)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNzg1OC8xNDM4OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Yiwei Li">
+            
+              <p class="site-author-name" itemprop="name">Yiwei Li</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="http://github.com/leepoly/" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                我的儿子们
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ppnuts.com/" title="帅气的lph" target="_blank">帅气的lph</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lgd.gd/" title="帅气的lgd" target="_blank">帅气的lgd</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#本文和已有指南的区别及简单原因"><span class="nav-number">1.</span> <span class="nav-text">本文和已有指南的区别及简单原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#环境说明"><span class="nav-number">2.</span> <span class="nav-text">环境说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤"><span class="nav-number">3.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-确认LvNA仿真和复现成功"><span class="nav-number">3.1.</span> <span class="nav-text">1. 确认LvNA仿真和复现成功</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Prepare-SD-Card"><span class="nav-number">3.2.</span> <span class="nav-text">2. Prepare SD Card</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-准备SD卡第二个分区"><span class="nav-number">3.3.</span> <span class="nav-text">3. 准备SD卡第二个分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-串口调试-PS-boot"><span class="nav-number">3.4.</span> <span class="nav-text">4. 串口调试 (PS boot)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-串口调试-PL-boot"><span class="nav-number">3.5.</span> <span class="nav-text">5. 串口调试 (PL boot)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见问题"><span class="nav-number">4.</span> <span class="nav-text">常见问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-按照官方LvNA-boot教程-PS-boot提示Flash型号识别失败SF-unrecognized-JEDEC-id-bytes"><span class="nav-number">4.1.</span> <span class="nav-text">1. 按照官方LvNA boot教程 PS boot提示Flash型号识别失败SF: unrecognized JEDEC id bytes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-使用PetaLinux生成的BOOT-BIN-boot-log卡在FSBL两行"><span class="nav-number">4.2.</span> <span class="nav-text">2. 使用PetaLinux生成的BOOT.BIN, boot log卡在FSBL两行.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-PetaLinux使用提示ERROR-Failed-to-generate-meta-plnx-generated-layer"><span class="nav-number">4.3.</span> <span class="nav-text">3. PetaLinux使用提示ERROR: Failed to generate meta-plnx-generated layer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-PL启动时提示init-mmap-failed"><span class="nav-number">4.4.</span> <span class="nav-text">4. PL启动时提示init_mmap failed</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-riscv-linux-fpga-defconfig编译失败"><span class="nav-number">4.5.</span> <span class="nav-text">5. riscv-linux fpga_defconfig编译失败</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-PL-boot时找不到串口端口-dev-ttyUL1"><span class="nav-number">4.6.</span> <span class="nav-text">6. PL boot时找不到串口端口/dev/ttyUL1.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-PL-boot-log在SMP部分挂住"><span class="nav-number">4.7.</span> <span class="nav-text">7. PL boot log在SMP部分挂住</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yiwei Li</span>
+
+  
+</div>
+
+
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
